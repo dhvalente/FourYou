@@ -27,7 +27,7 @@ public class Insurance {
     private String rules;
 
     public void registerInsurance(String name, String rules) {
-
+        //todo
     }
 
 

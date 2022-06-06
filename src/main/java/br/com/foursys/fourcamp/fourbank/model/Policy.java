@@ -31,7 +31,8 @@ public class Policy {
     private String termsDescription;
 
     public Integer generatePolicyNumber(CreditCard creditCard, Double policyValue, String termsDescription) {
-
+        //todo
+        return 0;
     }
 
 }
