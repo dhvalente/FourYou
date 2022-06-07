@@ -19,7 +19,7 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="pixes")
+@Table(name="tb_pix")
 public class Pix {
     @Id
     @Column(name = "id", nullable = false)
