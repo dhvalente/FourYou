@@ -2,6 +2,7 @@ package br.com.foursys.fourcamp.fourbank.model;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,9 +26,10 @@ public abstract class Account {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected Integer id;
-	protected String number;
-	protected Double balance;
+	private Long id;
+	private Integer number;
+	private Double balance;
+	//private String costumer; private Costumer costumer;
 
 	/*
 	 * @OneToOne
@@ -38,8 +40,9 @@ public abstract class Account {
 	 * 
 	 * @OneToMany(mappedBy = "conta") private Set<Pix> pix = new HashSet<>();
 	 */
-	
+
 	public Double showBalance() {
 		return balance;
 	}
+	
 }
