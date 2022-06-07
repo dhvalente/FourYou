@@ -5,17 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="policies")
+@Table(name="tb_policy")
 public class Policy {
 
     @Id
@@ -24,6 +21,9 @@ public class Policy {
 
     private CreditCard creditCard;
 
+    //OnetoOne?
+    @OneToOne
+    @JoinColumn(name = "insurance_id")
     private Insurance insurance;
 
     private Double policyValue;

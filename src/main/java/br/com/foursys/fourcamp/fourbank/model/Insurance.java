@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="insurances")
+@Table(name="tb_insurance")
 public class Insurance {
 
     @Id
