@@ -5,7 +5,7 @@ import lombok.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public enum CustomerType {
+public enum CustomerTypeEnum {
 	STANDARD(0),
 	SUPER(1),
 	PREMIUM(2);

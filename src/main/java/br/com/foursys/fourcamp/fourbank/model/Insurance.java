@@ -13,14 +13,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "tb_address")
-public class Address {
+@Table(name = "tb_insurance")
+public class Insurance {
 	private Integer id;
-	private String streetName;
-	private String number;
-	private String zipcode;
-	private String district;
-	private String city;
-	private String state;
-	
+	private String name;
+	private String rules;
 }
