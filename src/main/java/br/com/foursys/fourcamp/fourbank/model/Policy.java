@@ -1,4 +1,4 @@
-package br.com.foursys.fourcamp.fourbank.model;
+package com.fourcamp.fourcamp22.java.group4.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

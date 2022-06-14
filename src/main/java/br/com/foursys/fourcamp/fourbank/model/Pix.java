@@ -1,6 +1,6 @@
-package br.com.foursys.fourcamp.fourbank.model;
+package com.fourcamp.fourcamp22.java.group4.model;
 
-import br.com.foursys.fourcamp.fourbank.enums.PixKeyType;
+import com.fourcamp.fourcamp22.java.group4.enums.PixKeyType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,9 +10,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Data
@@ -27,18 +24,7 @@ public class Pix {
 
     private PixKeyType keyType;
 
-    private Double value;
-
-    private LocalDateTime date;
-
     private String keyContent;
 
     private Boolean isActive;
-
-    private Account account;
-
-    public Boolean activateKey(PixKeyType keyType, String keyContent, Boolean isActive) {
-        //todo
-        return true;
-    }
 }
