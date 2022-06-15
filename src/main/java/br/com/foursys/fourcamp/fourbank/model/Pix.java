@@ -1,17 +1,18 @@
-package com.fourcamp.fourbank.model;
+package br.com.foursys.fourcamp.fourbank.model;
 
-
-import com.fourcamp.fourbank.enums.PixKeyTypeEnum;
+import br.com.foursys.fourcamp.fourbank.enums.PixKeyType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.NonNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Data
@@ -23,10 +24,21 @@ public class Pix {
     @Id
     @Column(name = "id", nullable = false)
     private Long id;
-    @NonNull
-    private PixKeyTypeEnum keyType;
-    @NonNull
+
+    private PixKeyType keyType;
+
+    private Double value;
+
+    private LocalDateTime date;
+
     private String keyContent;
-    @NonNull
+
     private Boolean isActive;
+
+    private Account account;
+
+    public Boolean activateKey(PixKeyType keyType, String keyContent, Boolean isActive) {
+        //todo
+        return true;
+    }
 }

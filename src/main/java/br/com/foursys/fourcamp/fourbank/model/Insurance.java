@@ -1,10 +1,12 @@
-package com.fourcamp.fourbank.model;
+package br.com.foursys.fourcamp.fourbank.model;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.NonNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,12 +23,10 @@ public class Insurance {
 
     @Id
     @Column(name = "id", nullable = false)
-    private Long id;
+    private Integer id;
 
-    @NonNull
     private String name;
 
-    @NonNull
     private String rules;
 
     public void registerInsurance(String name, String rules) {

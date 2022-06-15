@@ -1,13 +1,16 @@
-package com.fourcamp.fourbank.exceptions;
+package br.com.foursys.fourcamp.fourbank.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class CustomerNotFoundException extends Exception{
+public class CustomerNotFoundException  extends Exception  {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-    public CustomerNotFoundException(Long id) {
-        super("Nenhum Cliente encontrado com a id " + id);
-    }
-    //todo conferir tipo de id
+	public CustomerNotFoundException (Long id){
+		super("Nenhum cliente encontrado com o id: " + id);
+	}
 }

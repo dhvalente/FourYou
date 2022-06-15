@@ -7,12 +7,15 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public enum PaymentTypeEnum {
-	CREDIT(0),
-	DEBIT(1),
-	PIX(2),
-	TED(3),
-	DOC(4);
+public enum KeyTypeEnum {
+
+	CPF(0),
+	EMAIL(1),
+	PHONE(2),
+	RANDOM(3);
 	
 	private Integer type;
+	
+	
+	
 }

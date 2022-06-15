@@ -1,4 +1,4 @@
-package com.fourcamp.fourcamp22.java.group4.enums;
+package br.com.foursys.fourcamp.fourbank.enums;
 
 import lombok.*;
 
