@@ -1,6 +1,6 @@
 package br.com.foursys.fourcamp.fourbank.service;
 
-import br.com.foursys.fourcamp.fourbank.dto.response.MessageResponseDTO;
+import br.com.foursys.fourcamp.fourbank.dto.response.CustomerMessageResponseDTO;
 import br.com.foursys.fourcamp.fourbank.exceptions.CustomerNotFoundException;
 import br.com.foursys.fourcamp.fourbank.model.Customer;
 
@@ -20,19 +20,19 @@ public class CustomerService {
 	
 	private CustomerRepository customerRepository;
 	
-	public MessageResponseDTO createCustomer(Customer customer) {
+	public CustomerMessageResponseDTO createCustomer(Customer customer) {
 		Customer savedCustomer = getCustomer(customer);
 		return createMessageResponse(savedCustomer.getId(), "Criado ");
 	}
 	
-	public MessageResponseDTO updateById(Long id, Customer customer) throws CustomerNotFoundException {
+	public CustomerMessageResponseDTO updateById(Long id, Customer customer) throws CustomerNotFoundException {
 		verifyIfExists(id);
 		Customer updateCustomer = getCustomer(customer);
 		return createMessageResponse(updateCustomer.getId(), "Atualizado");
 	}
 	
-	private MessageResponseDTO createMessageResponse(Long id, String s) {
-		return MessageResponseDTO.builder()
+	private CustomerMessageResponseDTO createMessageResponse(Long id, String s) {
+		return CustomerMessageResponseDTO.builder()
 				.message(s + "Cliente com o id" + id)
 				.build();
 	}

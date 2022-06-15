@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import br.com.foursys.fourcamp.fourbank.dto.response.MessageResponseDTO;
+import br.com.foursys.fourcamp.fourbank.dto.response.CustomerMessageResponseDTO;
 import br.com.foursys.fourcamp.fourbank.exceptions.CustomerNotFoundException;
 import br.com.foursys.fourcamp.fourbank.model.Address;
 import br.com.foursys.fourcamp.fourbank.model.Customer;
@@ -24,7 +24,7 @@ public class CustomerController {
 	
 	@PostMapping("/{id}")
 	@ResponseStatus(HttpStatus.CREATED)
-	public MessageResponseDTO createCliente(@RequestBody Customer customer) {
+	public CustomerMessageResponseDTO createCliente(@RequestBody Customer customer) {
 		return customerService.createCustomer(customer);
 	}
 	
@@ -39,7 +39,7 @@ public class CustomerController {
 	}
 	
 	@PutMapping("/{id}")
-	public MessageResponseDTO updateById(@PathVariable Long id, @RequestBody Customer customer, @RequestBody Address addres) throws CustomerNotFoundException{
+	public CustomerMessageResponseDTO updateById(@PathVariable Long id, @RequestBody Customer customer, @RequestBody Address addres) throws CustomerNotFoundException{
 		return customerService.updateById(id, customer);
 	}
 	
