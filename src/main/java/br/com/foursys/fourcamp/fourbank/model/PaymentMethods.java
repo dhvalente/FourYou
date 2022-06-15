@@ -3,6 +3,7 @@ package br.com.foursys.fourcamp.fourbank.model;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,14 +14,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "tb_address")
-public class Address {
+@Table(name = "tb_transaction")
+public class PaymentMethods {
 	private Integer id;
-	private String streetName;
-	private String number;
-	private String cep;
-	private String district;
-	private String city;
-	private String state;
+	private PaymentTypeEnum type;
+	private String identifier;
+	private Account account;
+	private Account originAccount;
+	private Account destinationAccount;
+	private Double value;
 	
+
 }

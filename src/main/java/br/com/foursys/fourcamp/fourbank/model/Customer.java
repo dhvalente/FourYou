@@ -4,8 +4,7 @@ import java.time.LocalDateTime;
 
 import javax.persistence.*;
 import lombok.*;
-import br.com.foursys.fourcamp.fourbank.enums.CustomerType;
-
+import br.com.foursys.fourcamp.fourbank.enums.CustomerTypeEnum;
 
 @Entity
 @Data
@@ -14,12 +13,17 @@ import br.com.foursys.fourcamp.fourbank.enums.CustomerType;
 @NoArgsConstructor
 @Table(name = "tb_customer")
 public class Customer {
-	private Integer id;
-	private String cpf;
+	private Long id;
 	private String name;
 	private LocalDateTime dateOfBirth;
-	private CustomerType type;
+	private String cpf;
+	private String nCell;
+	private Double income;
+	private String Email;
 	private Address address;
-	
+	private String password;
+	private CustomerTypeEnum type;
+	private String imgUrl;
+
 	
 }
