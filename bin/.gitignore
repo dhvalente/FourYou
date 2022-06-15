@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+/.apt_generated_tests/
+/.gitignore
+/.mvn/
+/mvnw
+/mvnw.cmd
+/pom.xml
+/src/

@@ -21,5 +21,4 @@ abstract class Card {
 	//@ManyToOne
 	//@JoinColumn(name="tb_account", referencedColumnName = "id")
 	//protected Account account;
-	
 }
