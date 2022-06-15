@@ -1,9 +1,10 @@
-package com.fourcamp.fourcamp22.java.group4.model;
+package com.fourcamp.fourbank.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 
@@ -17,17 +18,16 @@ public class Policy {
 
     @Id
     @Column(name = "nrpolicy", nullable = false)
-    private Integer nrPolicy;
-
+    private Long id;
+    @NonNull
     private CreditCard creditCard;
-
     //OnetoOne?
     @OneToOne
     @JoinColumn(name = "insurance_id")
     private Insurance insurance;
-
+    @NonNull
     private Double policyValue;
-
+    @NonNull
     private String termsDescription;
 
     public Integer generatePolicyNumber(CreditCard creditCard, Double policyValue, String termsDescription) {

@@ -1,7 +1,7 @@
-package com.fourcamp.fourcamp22.java.group4.repository;
+package com.fourcamp.fourbank.repository;
 
-import br.com.foursys.fourcamp.fourbank.model.Insurance;
+import com.fourcamp.fourbank.model.Insurance;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface InsuranceRepository extends JpaRepository<Insurance, Integer> {
+public interface InsuranceRepository extends JpaRepository<Insurance, Long> {
 }

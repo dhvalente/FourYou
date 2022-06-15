@@ -1,10 +1,12 @@
-package com.fourcamp.fourcamp22.java.group4.model;
+package com.fourcamp.fourbank.model;
 
-import com.fourcamp.fourcamp22.java.group4.enums.PixKeyType;
+
+import com.fourcamp.fourbank.enums.PixKeyTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.NonNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,10 +23,10 @@ public class Pix {
     @Id
     @Column(name = "id", nullable = false)
     private Long id;
-
-    private PixKeyType keyType;
-
+    @NonNull
+    private PixKeyTypeEnum keyType;
+    @NonNull
     private String keyContent;
-
+    @NonNull
     private Boolean isActive;
 }

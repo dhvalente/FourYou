@@ -1,4 +1,4 @@
-package com.fourcamp.fourcamp22.java.group4.model;
+package com.fourcamp.fourbank.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +21,7 @@ public class Insurance {
 
     @Id
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @NonNull
     private String name;

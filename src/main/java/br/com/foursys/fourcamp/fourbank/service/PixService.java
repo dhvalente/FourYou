@@ -1,9 +1,9 @@
-package com.fourcamp.fourcamp22.java.group4.service;
+package com.fourcamp.fourbank.service;
 
-import com.fourcamp.fourcamp22.java.group4.dto.response.MessageResponseDTO;
-import com.fourcamp.fourcamp22.java.group4.exceptions.PixNotFoundException;
-import com.fourcamp.fourcamp22.java.group4.model.Pix;
-import com.fourcamp.fourcamp22.java.group4.repository.PixRepository;
+import com.fourcamp.fourbank.dto.response.MessageResponseDTO;
+import com.fourcamp.fourbank.exceptions.PixNotFoundException;
+import com.fourcamp.fourbank.model.Pix;
+import com.fourcamp.fourbank.repository.PixRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,14 +28,14 @@ public class PixService {
         return pixRepository.findAll();
     }
 
-    public MessageResponseDTO updateById(Long id, Pix pix) throws PixNotFoundException {
+    public MessageResponseDTO updateById(String id, Pix pix) throws PixNotFoundException {
         verifyIfExists(id);
         Pix validPix = pixIsValid(pix);
         Pix updatedPix = getPix(validPix);
         return createMessageResponse(updatedPix.getId(), "Updated ");
     }
 
-    public void delete(Long id) throws PixNotFoundException {
+    public void delete(String id) throws PixNotFoundException {
         verifyIfExists(id);
         pixRepository.deleteById(id);
     }
@@ -51,7 +51,7 @@ public class PixService {
                 .build();
     }
 
-    private Pix verifyIfExists(Long id) throws PixNotFoundException {
+    private Pix verifyIfExists(String id) throws PixNotFoundException {
         return pixRepository.findById(id)
                 .orElseThrow(() -> new PixNotFoundException(id));
     }
@@ -61,7 +61,7 @@ public class PixService {
         return pix;
     }
 
-    public Pix findById(Long id) throws PixNotFoundException {
+    public Pix findById(String id) throws PixNotFoundException {
         return verifyIfExists(id);
     }
 

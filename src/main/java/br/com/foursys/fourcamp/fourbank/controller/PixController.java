@@ -1,10 +1,10 @@
-package com.fourcamp.fourcamp22.java.group4.controller;
+package com.fourcamp.fourbank.controller;
 
 
-import com.fourcamp.fourcamp22.java.group4.dto.response.MessageResponseDTO;
-import com.fourcamp.fourcamp22.java.group4.exceptions.PixNotFoundException;
-import com.fourcamp.fourcamp22.java.group4.model.Pix;
-import com.fourcamp.fourcamp22.java.group4.service.PixService;
+import com.fourcamp.fourbank.dto.response.MessageResponseDTO;
+import com.fourcamp.fourbank.exceptions.PixNotFoundException;
+import com.fourcamp.fourbank.model.Pix;
+import com.fourcamp.fourbank.service.PixService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -35,19 +35,19 @@ public class PixController {
     }
 
     @GetMapping("/{id}")
-    public Pix findById(@PathVariable Long id) throws PixNotFoundException {
+    public Pix findById(@PathVariable String id) throws PixNotFoundException {
         return pixService.findById(id);
     }
 
     @PutMapping("/{id}")
-    public MessageResponseDTO updateById(@PathVariable Long id, @RequestBody Pix pix)
+    public MessageResponseDTO updateById(@PathVariable String id, @RequestBody Pix pix)
             throws PixNotFoundException {
         return pixService.updateById(id, pix);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable Long id) throws PixNotFoundException {
+    public void deleteById(@PathVariable String id) throws PixNotFoundException {
         pixService.delete(id);
     }
 }

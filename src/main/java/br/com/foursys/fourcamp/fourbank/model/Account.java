@@ -1,4 +1,4 @@
-package com.fourcamp.fourcamp22.java.group4.model;
+package com.fourcamp.fourbank.model;
 
 public class Account {
 }

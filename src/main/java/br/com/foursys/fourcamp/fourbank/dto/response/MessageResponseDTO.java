@@ -1,4 +1,4 @@
-package com.fourcamp.fourcamp22.java.group4.dto.response;
+package com.fourcamp.fourbank.dto.response;
 
 import lombok.Builder;
 import lombok.Data;
