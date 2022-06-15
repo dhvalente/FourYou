@@ -16,12 +16,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "tb_credit_card")
-public class CreditCard extends Card{
+@Table(name = "tb_debit_card")
+public class DebitCard extends Card{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private Double creditLimit;	
+	private Double limitByTransaction;	
 
 	
 }

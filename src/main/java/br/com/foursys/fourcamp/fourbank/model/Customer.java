@@ -6,7 +6,6 @@ import javax.persistence.*;
 import lombok.*;
 import br.com.foursys.fourcamp.fourbank.enums.CustomerTypeEnum;
 
-
 @Entity
 @Data
 @Builder
@@ -25,7 +24,6 @@ public class Customer {
 	private String password;
 	private CustomerTypeEnum type;
 	private String imgUrl;
-	
-	
+
 	
 }
