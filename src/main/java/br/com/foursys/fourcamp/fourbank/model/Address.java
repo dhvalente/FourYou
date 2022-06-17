@@ -1,26 +1,41 @@
 package br.com.foursys.fourcamp.fourbank.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import br.com.foursys.fourcamp.fourbank.enums.CustomerTypeEnum;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
-@Builder
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "tb_address")
-public class Address {
-	private Integer id;
-	private String streetName;
+public class Address implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	private String street;
 	private String number;
-	private String cep;
-	private String district;
 	private String city;
+	private String district;
 	private String state;
+	private String zipcode;
+	@JsonIgnore
+	@OneToOne
+	@MapsId
+	private Customer customer;
 	
 }

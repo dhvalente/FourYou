@@ -1,12 +1,13 @@
-package com.fourcamp.fourcamp22.java.group4.service;
-
-import com.fourcamp.fourcamp22.java.group4.model.SavingsAccount;
-import com.fourcamp.fourcamp22.java.group4.repository.SavingsAccountRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+package br.com.foursys.fourcamp.fourbank.service;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import br.com.foursys.fourcamp.fourbank.model.SavingsAccount;
+import br.com.foursys.fourcamp.fourbank.repository.SavingsAccountRepository;
 
 @Service
 public class SavingsAccountService {

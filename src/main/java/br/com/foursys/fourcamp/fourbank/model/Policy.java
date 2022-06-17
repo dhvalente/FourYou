@@ -1,10 +1,12 @@
-package com.fourcamp.fourbank.model;
+package br.com.foursys.fourcamp.fourbank.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
+
+import java.io.Serializable;
 
 import javax.persistence.*;
 
@@ -14,9 +16,10 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="tb_policy")
-public class Policy {
-
-    @Id
+public class Policy implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
+	@Id
     @Column(name = "nrpolicy", nullable = false)
     private Long id;
     @NonNull
@@ -36,3 +39,4 @@ public class Policy {
     }
 
 }
+

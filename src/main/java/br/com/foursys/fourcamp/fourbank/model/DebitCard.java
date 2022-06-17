@@ -1,27 +1,26 @@
 package br.com.foursys.fourcamp.fourbank.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Inheritance
 @Table(name = "tb_debit_card")
-public class DebitCard extends Card{
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private Double limitByTransaction;	
+public class DebitCard extends Card implements Serializable {
 
-	
+	private static final long serialVersionUID = 1L;
+
+	private Double limitByTransaction;
+
 }

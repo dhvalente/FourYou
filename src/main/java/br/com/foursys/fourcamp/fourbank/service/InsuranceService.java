@@ -1,13 +1,14 @@
-package com.fourcamp.fourbank.service;
+package br.com.foursys.fourcamp.fourbank.service;
 
-import com.fourcamp.fourbank.dto.response.MessageResponseDTO;
-import com.fourcamp.fourbank.exceptions.InsuranceNotFoundException;
-import com.fourcamp.fourbank.model.Insurance;
-import com.fourcamp.fourbank.repository.InsuranceRepository;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
+import br.com.foursys.fourcamp.fourbank.exceptions.InsuranceNotFoundException;
+import br.com.foursys.fourcamp.fourbank.model.Insurance;
+import br.com.foursys.fourcamp.fourbank.repository.InsuranceRepository;
 
 @Service
 public class InsuranceService {

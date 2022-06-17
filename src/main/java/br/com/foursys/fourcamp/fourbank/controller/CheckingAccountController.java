@@ -1,11 +1,13 @@
-package com.fourcamp.fourcamp22.java.group4.controller;
+package br.com.foursys.fourcamp.fourbank.controller;
 
-import com.fourcamp.fourcamp22.java.group4.model.CheckingAccount;
-import com.fourcamp.fourcamp22.java.group4.service.CheckingAccountService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import br.com.foursys.fourcamp.fourbank.model.CheckingAccount;
+import br.com.foursys.fourcamp.fourbank.service.CheckingAccountService;
 
 import java.net.URI;
 import java.util.List;
@@ -31,7 +33,9 @@ public class CheckingAccountController {
 
     @PostMapping
     public ResponseEntity<CheckingAccount> save(@RequestBody CheckingAccount obj) {
-        obj = service.save(obj);
+    	service.maintenance(obj);
+    	service.descontMaintenance(obj);
+    	obj = service.save(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).body(obj);
     }

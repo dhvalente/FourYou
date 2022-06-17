@@ -1,7 +1,10 @@
-package com.fourcamp.fourbank.repository;
+package br.com.foursys.fourcamp.fourbank.repository;
 
-import com.fourcamp.fourbank.model.Insurance;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+import br.com.foursys.fourcamp.fourbank.model.Insurance;
+
+@Repository
 public interface InsuranceRepository extends JpaRepository<Insurance, Long> {
 }

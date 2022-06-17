@@ -1,7 +1,12 @@
-package com.fourcamp.fourcamp22.java.group4.repository;
+package br.com.foursys.fourcamp.fourbank.repository;
 
-import com.fourcamp.fourcamp22.java.group4.model.SavingsAccount;
+
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+import br.com.foursys.fourcamp.fourbank.model.SavingsAccount;
+
+@Repository
 public interface SavingsAccountRepository extends JpaRepository<SavingsAccount, Integer> {
 }

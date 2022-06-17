@@ -1,4 +1,4 @@
-package com.fourcamp.fourbank.exceptions;
+package br.com.foursys.fourcamp.fourbank.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

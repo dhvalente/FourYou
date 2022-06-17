@@ -1,13 +1,14 @@
-package com.fourcamp.fourbank.service;
+package br.com.foursys.fourcamp.fourbank.service;
 
-import com.fourcamp.fourbank.dto.response.MessageResponseDTO;
-import com.fourcamp.fourbank.exceptions.PolicyNotFoundException;
-import com.fourcamp.fourbank.model.Policy;
-import com.fourcamp.fourbank.repository.PolicyRepository;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
+import br.com.foursys.fourcamp.fourbank.exceptions.PolicyNotFoundException;
+import br.com.foursys.fourcamp.fourbank.model.Policy;
+import br.com.foursys.fourcamp.fourbank.repository.PolicyRepository;
 
 @Service
 public class PolicyService {

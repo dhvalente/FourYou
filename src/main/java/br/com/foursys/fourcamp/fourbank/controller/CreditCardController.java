@@ -1,61 +1,58 @@
 package br.com.foursys.fourcamp.fourbank.controller;
 
-import java.net.URI;
-import java.util.List;
-
-import javax.persistence.criteria.Order;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
+import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
+import br.com.foursys.fourcamp.fourbank.exceptions.CardNotFoundException;
 import br.com.foursys.fourcamp.fourbank.model.CreditCard;
 import br.com.foursys.fourcamp.fourbank.service.CreditCardService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping(value = "/creditCard")
+@RequestMapping("/creditCard")
 public class CreditCardController {
 
 	@Autowired
-	private CreditCardService creditCardService;
+	private final CreditCardService creditCardService;
 
-	@GetMapping
-	public ResponseEntity<List<CreditCard>> findAll() {
-		List<CreditCard> list = creditCardService.findAll();
-		return ResponseEntity.ok().body(list);
-	}
-
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<CreditCard> findById(@PathVariable Long id) {
-		CreditCard obj = creditCardService.findById(id);
-		return ResponseEntity.ok().body(obj);
+	@Autowired
+	public CreditCardController(CreditCardService creditCardService) {
+		this.creditCardService = creditCardService;
 	}
 
 	@PostMapping
-	public ResponseEntity<CreditCard> insert(@RequestBody CreditCard obj) {
-		obj = creditCardService.insert(obj);
-		// Para retornar com status 201
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-		return ResponseEntity.created(uri).body(obj);
+	@ResponseStatus(HttpStatus.CREATED)
+	public MessageResponseDTO createCreditCard(@RequestBody CreditCard creditCard) {
+		return creditCardService.createCreditCard(creditCard);
 	}
 
-	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
+	@GetMapping
+	public List<CreditCard> listAll() {
+		return creditCardService.listAll();
+	}
+
+	@GetMapping("/{id}")
+	public CreditCard findById(@PathVariable Long id) throws CardNotFoundException {
+		return creditCardService.findById(id);
+	}
+
+	@PutMapping("/{id}")
+	public MessageResponseDTO updateById(@PathVariable Long id, @RequestBody CreditCard creditCard)
+			throws CardNotFoundException {
+		return creditCardService.updateById(id, creditCard);
+	}
+
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteById(@PathVariable Long id) throws CardNotFoundException {
 		creditCardService.delete(id);
-		return ResponseEntity.noContent().build();
 	}
 	
-	@PutMapping(value = "/{id}")
-	public ResponseEntity<CreditCard> update(@PathVariable Long id , @RequestBody CreditCard obj) {
-		obj = creditCardService.update(id, obj);
-		return ResponseEntity.ok(obj);
+	@PutMapping("/updatestatus/{id}")
+	public CreditCard updateStatus(@PathVariable Long id, @RequestBody String status) throws CardNotFoundException {
+		return creditCardService.updateStatus(status , id);
+
 	}
 }

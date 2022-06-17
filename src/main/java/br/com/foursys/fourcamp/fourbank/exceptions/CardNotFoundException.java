@@ -1,7 +1,7 @@
-package com.fourcamp.fourbank.exceptions;
+package br.com.foursys.fourcamp.fourbank.exceptions;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.http.HttpStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class CardNotFoundException extends Exception{
