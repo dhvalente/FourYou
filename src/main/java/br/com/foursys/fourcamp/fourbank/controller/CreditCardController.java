@@ -7,13 +7,12 @@ import br.com.foursys.fourcamp.fourbank.service.CreditCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/creditCard")
 public class CreditCardController {
-
+	
 	@Autowired
 	private final CreditCardService creditCardService;
 
@@ -50,8 +49,9 @@ public class CreditCardController {
 		creditCardService.delete(id);
 	}
 	
-	@PutMapping("/updatestatus/{id}")
-	public CreditCard updateStatus(@PathVariable Long id, @RequestBody String status) throws CardNotFoundException {
+	@PutMapping("/updatestatus/{id}/{status}")
+	public CreditCard updateStatus(@PathVariable Long id, @PathVariable String status) throws CardNotFoundException {
+		System.out.println(status);
 		return creditCardService.updateStatus(status , id);
 
 	}

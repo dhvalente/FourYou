@@ -7,6 +7,7 @@ import br.com.foursys.fourcamp.fourbank.exceptions.UptadeStatusInvalidParameters
 import br.com.foursys.fourcamp.fourbank.model.CreditCard;
 import br.com.foursys.fourcamp.fourbank.repository.CreditCardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.annotation.QueryAnnotation;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +23,9 @@ public class CreditCardService {
 		this.creditCardRepository = creditCardRepository;
 	}
 
-	public MessageResponseDTO createCreditCard(CreditCard creditCard) {
+	public MessageResponseDTO createCreditCard(CreditCard creditCard){
+		//Regra de negocio correta, falta instanciar customer e account
+		//setCreditLimit(creditCard);
 		CreditCard savedCreditCard = getCreditCard(creditCard);
 		return createMessageResponse(savedCreditCard.getId(), "Created ");
 	}
@@ -68,29 +71,38 @@ public class CreditCardService {
 		return verifyIfExists(id);
 	}
 	
-	public void discountCreditLimit(Double valor, Long id){
-		Optional<CreditCard> creditCardOptional = creditCardRepository.findById(id);
-		CreditCard creditCard = creditCardOptional.get();
+	public void discountCreditLimit(Double valor, Long id) throws CardNotFoundException{
+		CreditCard creditCard = verifyIfExists(id);
 		Double creditLimit = creditCard.getCreditLimit();
 		if(valor > creditLimit) {
 			throw new CreditLimitInsufficientException();
 		} else {
 			creditCard.setCreditLimit(creditLimit - valor);
 		}
-	} 	
-
+	} 		
 	
+	public void verifyMonthCreditLimit() {
+		
+	}
 	
-	public CreditCard updateStatus(String status , Long id) {
-		Optional<CreditCard> creditCardOptional = creditCardRepository.findById(id);
-		CreditCard creditCard = creditCardOptional.get();
-		if(status == "ativo") {
-			creditCard.setActive(true);	
-		}
-		if(status == "desativado") {
+	public CreditCard updateStatus(String status , Long id) throws CardNotFoundException {
+		CreditCard creditCard = verifyIfExists(id);
+		if(status.equals("ativo")) {
+			creditCard.setActive(true);
+			creditCardRepository.save(creditCard);
+		} else if (status.equals("desativado")){
 			creditCard.setActive(false);
+			creditCardRepository.save(creditCard);
 		}
+		
 		return creditCardRepository.save(creditCard);
 	}
+
+	public void setCreditLimit(CreditCard creditCard){		
+		Double income = creditCard.getAccount().getCustomer().getIncome();
+		Double limit = income *  2;
+		creditCard.setCreditLimit(limit);
+	}
+
 
 }

@@ -16,15 +16,13 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public abstract class Card implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	protected String number = generateNumber("MASTER");
+	protected String number = generateNumber("VISA");
 	protected String customerCardName;
 	protected String password;
 	protected String expireDate;
