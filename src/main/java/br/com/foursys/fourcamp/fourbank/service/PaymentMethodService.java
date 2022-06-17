@@ -14,6 +14,7 @@ import br.com.foursys.fourcamp.fourbank.util.PaymentMethodValidations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,11 +34,17 @@ public class PaymentMethodService {
     public MessageResponseDTO createPaymentMethod(PaymentMethod paymentMethod) throws InvalidParametersException,
             UnregisteredPaymentMethodException, AccountNotFoundException {
         PaymentMethod savedPaymentMethod = getPaymentMethod(paymentMethod);
-        return createMessageResponse(savedPaymentMethod.getId(), "Created ");
+        return createMessageResponse(savedPaymentMethod.getId(), "Criada ");
     }
 
-    public List<PaymentMethod> listAll() {
-        return paymentMethodRepository.findAll();
+    public List<PaymentMethod> listAllByAccount(Integer accountId) {
+        List<PaymentMethod> paymentMethodList = new ArrayList<>();
+        for (PaymentMethod paymentMethod : paymentMethodRepository.findAll()) {
+            if (paymentMethod.getOriginAccount().getId().equals(accountId)) {
+                paymentMethodList.add(paymentMethod);
+            }
+        }
+        return paymentMethodList;
     }
 
     private PaymentMethod getPaymentMethod(PaymentMethod paymentMethod) throws InvalidParametersException,
@@ -48,7 +55,7 @@ public class PaymentMethodService {
 
     private MessageResponseDTO createMessageResponse(Long id, String s) {
         return MessageResponseDTO.builder()
-                .message(s + "PaymentMethod com a id " + id)
+                .message(s + "Transação com a id " + id)
                 .build();
     }
 
@@ -72,6 +79,7 @@ public class PaymentMethodService {
             throw new AccountNotFoundException(paymentMethod.getOriginAccount().getId());
         }
         //checar limites
+        //Alterar limite do cartão de crédito, ou o saldo da conta
         return paymentMethod;
     }
 

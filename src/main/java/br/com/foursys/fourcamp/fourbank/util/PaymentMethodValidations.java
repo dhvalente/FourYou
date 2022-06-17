@@ -1,8 +1,6 @@
 package br.com.foursys.fourcamp.fourbank.util;
+import br.com.foursys.fourcamp.fourbank.model.*;
 
-import br.com.foursys.fourcamp.fourbank.model.Account;
-import br.com.foursys.fourcamp.fourbank.model.Card;
-import br.com.foursys.fourcamp.fourbank.model.Pix;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
