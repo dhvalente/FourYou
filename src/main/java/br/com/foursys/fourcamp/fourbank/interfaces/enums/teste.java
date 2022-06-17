@@ -1,4 +1,4 @@
-package com.fourcamp.fourcamp22.java.group4.interfaces.enums;
+package br.com.foursys.fourcamp.fourbank.interfaces.enums;
 
 public class teste {
 

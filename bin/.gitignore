@@ -1,5 +1,9 @@
 HELP.md
 target/
+.idea/
+.settings/
+.classpath
+.mvn/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -33,7 +37,6 @@ build/
 .vscode/
 /.apt_generated_tests/
 /.gitignore
-/.mvn/
 /mvnw
 /mvnw.cmd
 /pom.xml
