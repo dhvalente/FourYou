@@ -1,5 +1,6 @@
 package br.com.foursys.fourcamp.fourbank.service;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +41,19 @@ public class SavingsAccountService {
         findById(id);
         repository.deleteById(id);
 
+    }
+    
+    public void yield(SavingsAccount savings) {
+    	if(savings.getBalance() > 00.00) {
+    		savings.setYieldRate(1.0022);
+    	}
+    }
+    
+    public void addYield(SavingsAccount savings) {
+    	Calendar calendar = Calendar.getInstance();
+    	if(Calendar.HOUR_OF_DAY == calendar.get(Calendar.HOUR_OF_DAY)) {
+    		savings.setBalance(savings.getBalance() * savings.getYieldRate());
+    	}
     }
 
     private void upData(SavingsAccount entity, SavingsAccount obj) {
