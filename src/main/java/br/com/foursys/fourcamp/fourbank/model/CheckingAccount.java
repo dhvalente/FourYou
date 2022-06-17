@@ -1,4 +1,3 @@
-package com.fourcamp.fourcamp22.java.group4.model;
 package br.com.foursys.fourcamp.fourbank.model;
 
 import javax.persistence.Entity;

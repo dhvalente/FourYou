@@ -1,9 +1,10 @@
-package com.fourcamp.fourcamp22.java.group4.service;
+package br.com.foursys.fourcamp.fourbank.service;
 
-import com.fourcamp.fourcamp22.java.group4.model.CheckingAccount;
-import com.fourcamp.fourcamp22.java.group4.repository.CheckingAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import br.com.foursys.fourcamp.fourbank.model.CheckingAccount;
+import br.com.foursys.fourcamp.fourbank.repository.CheckingAccountRepository;
 
 import java.util.List;
 import java.util.Optional;

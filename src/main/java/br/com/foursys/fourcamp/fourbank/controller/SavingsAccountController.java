@@ -1,12 +1,14 @@
-package com.fourcamp.fourcamp22.java.group4.controller;
+package br.com.foursys.fourcamp.fourbank.controller;
 
 
-import com.fourcamp.fourcamp22.java.group4.model.SavingsAccount;
-import com.fourcamp.fourcamp22.java.group4.service.SavingsAccountService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import br.com.foursys.fourcamp.fourbank.model.SavingsAccount;
+import br.com.foursys.fourcamp.fourbank.service.SavingsAccountService;
 
 import java.net.URI;
 import java.util.List;
