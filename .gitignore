@@ -1,5 +1,9 @@
 HELP.md
 target/
+.idea/
+.settings/
+.classpath
+.mvn/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
