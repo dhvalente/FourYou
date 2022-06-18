@@ -32,9 +32,14 @@ public class CreditCardController {
 		return creditCardService.listAll();
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/findById/{id}")
 	public CreditCard findById(@PathVariable Long id) throws CardNotFoundException {
 		return creditCardService.findById(id);
+	}
+	
+	@GetMapping("/findByNumber/{number}")
+	public CreditCard findById(@PathVariable String number) throws CardNotFoundException {
+		return creditCardService.findByNumber(number);
 	}
 
 	@PutMapping("/{id}")
@@ -51,7 +56,6 @@ public class CreditCardController {
 	
 	@PutMapping("/updatestatus/{id}/{status}")
 	public CreditCard updateStatus(@PathVariable Long id, @PathVariable String status) throws CardNotFoundException {
-		System.out.println(status);
 		return creditCardService.updateStatus(status , id);
 
 	}

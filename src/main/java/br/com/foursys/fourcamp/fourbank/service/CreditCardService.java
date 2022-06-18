@@ -1,15 +1,23 @@
 package br.com.foursys.fourcamp.fourbank.service;
 
 import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
+import br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum;
 import br.com.foursys.fourcamp.fourbank.exceptions.CardNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.CreditLimitInsufficientException;
 import br.com.foursys.fourcamp.fourbank.exceptions.UptadeStatusInvalidParametersException;
 import br.com.foursys.fourcamp.fourbank.model.CreditCard;
 import br.com.foursys.fourcamp.fourbank.repository.CreditCardRepository;
+
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.QueryAnnotation;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +25,9 @@ import java.util.Optional;
 public class CreditCardService {
 	@Autowired
 	private CreditCardRepository creditCardRepository;
+	
+	@Autowired
+	private TransactionRepository transactionRepository;
 	
 
 	public CreditCardService(CreditCardRepository creditCardRepository) {
@@ -71,18 +82,33 @@ public class CreditCardService {
 		return verifyIfExists(id);
 	}
 	
-	public void discountCreditLimit(Double valor, Long id) throws CardNotFoundException{
-		CreditCard creditCard = verifyIfExists(id);
-		Double creditLimit = creditCard.getCreditLimit();
-		if(valor > creditLimit) {
-			throw new CreditLimitInsufficientException();
-		} else {
-			creditCard.setCreditLimit(creditLimit - valor);
-		}
-	} 		
+	public CreditCard findByNumber(String number) throws CardNotFoundException {
+		return creditCardRepository.findByNumber(number);
+	}
 	
-	public void verifyMonthCreditLimit() {
-		
+	public boolean discountCreditLimit(Double valor, Long id) throws CardNotFoundException{
+		CreditCard creditCard = verifyIfExists(id);
+		Double currentMonthValueTransaction = verifyMonthCreditLimit();
+		Double creditLimit = creditCard.getCreditLimit();		
+		Double currentLimit = creditLimit - currentMonthValueTransaction ;
+		if(valor > currentLimit) {
+			throw new CreditLimitInsufficientException();
+			return false;
+		} 
+		return true;
+	} 		
+	//todo arrumar import de Transaction quando tiver a classe.
+	public Double verifyMonthCreditLimit() {
+		Month currentMonth = LocalDateTime.now().getMonth();
+		Double currentMonthValueTransaction = 0.00;
+		List <Transaction> list = transactionRepository.findAll();		
+		list.forEach((transaction) -> {
+			Month monthTransaction = transaction.getDate().getMoth();
+			if(monthTransaction == currentMonth && transaction.getPaymentTypeEnum() == PaymentTypeEnum.CREDIT) {
+				currentMonthValueTransaction += transaction.getValue();
+			}
+		});
+		return currentMonthValueTransaction;
 	}
 	
 	public CreditCard updateStatus(String status , Long id) throws CardNotFoundException {
@@ -103,6 +129,8 @@ public class CreditCardService {
 		Double limit = income *  2;
 		creditCard.setCreditLimit(limit);
 	}
+	
+
 
 
 }
