@@ -1,14 +1,13 @@
 package br.com.foursys.fourcamp.fourbank.service;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
-
+import br.com.foursys.fourcamp.fourbank.model.SavingsAccount;
+import br.com.foursys.fourcamp.fourbank.repository.SavingsAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.foursys.fourcamp.fourbank.model.SavingsAccount;
-import br.com.foursys.fourcamp.fourbank.repository.SavingsAccountRepository;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SavingsAccountService {
@@ -17,9 +16,8 @@ public class SavingsAccountService {
     private SavingsAccountRepository repository;
 
 
-    public SavingsAccount findById(Integer id) {
-        Optional<SavingsAccount> obj = repository.findById(id);
-        return obj.get();
+    public Optional<SavingsAccount> findById(Integer id) {
+        return repository.findById(id);
     }
 
     public List<SavingsAccount> findAll() {
