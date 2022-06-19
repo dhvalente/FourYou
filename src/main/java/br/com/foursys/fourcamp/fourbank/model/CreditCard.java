@@ -21,6 +21,6 @@ public class CreditCard extends Card implements Serializable{
 
 	private Double creditLimit;
 
-	private List<CreditCardInstallment> creditCardInstallments;
+	//private List<CreditCardInstallment> creditCardInstallments;
 
 }

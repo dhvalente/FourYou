@@ -2,7 +2,7 @@ package br.com.foursys.fourcamp.fourbank.service;
 
 import br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum;
 import br.com.foursys.fourcamp.fourbank.model.SavingsAccount;
-import br.com.foursys.fourcamp.fourbank.model.Transaction;
+import br.com.foursys.fourcamp.fourbank.model.TransactionAccount;
 import br.com.foursys.fourcamp.fourbank.repository.TransactionAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class TransactionSavingsAccountService {
         savingsAccount.setBalance(savingsAccount.getBalance() + depositValue);
         savingsAccountService.save(savingsAccount);
 
-        Transaction transaction = new Transaction();
+        TransactionAccount transaction = new TransactionAccount();
         transaction.setPaymentTypeEnum(PaymentTypeEnum.DEPOSIT);
         transaction.setValue(depositValue);
         transaction.setPayerId(accountId);
@@ -36,7 +36,7 @@ public class TransactionSavingsAccountService {
             account.setBalance(account.getBalance() - withdrawValue);
             savingsAccountService.save(account);
 
-            Transaction transaction = new Transaction();
+            TransactionAccount transaction = new TransactionAccount();
             transaction.setPaymentTypeEnum(PaymentTypeEnum.WITHDRAW);
             transaction.setValue(withdrawValue);
             transaction.setPayerId(accountId);
@@ -58,7 +58,7 @@ public class TransactionSavingsAccountService {
             accountReceiver.setBalance(accountReceiver.getBalance() + transferValue);
             savingsAccountService.save(accountReceiver);
 
-            Transaction transaction = new Transaction();
+            TransactionAccount transaction = new TransactionAccount();
             transaction.setPaymentTypeEnum(PaymentTypeEnum.TRANSFER);
             transaction.setValue(transferValue);
             transaction.setPayerId(payerId);

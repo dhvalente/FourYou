@@ -36,8 +36,4 @@ build/
 ### VS Code ###
 .vscode/
 /.apt_generated_tests/
-/.gitignore
-/mvnw
-/mvnw.cmd
-/pom.xml
 /src/

@@ -8,10 +8,10 @@ import br.com.foursys.fourcamp.fourbank.exceptions.PaymentNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.UnregisteredPaymentMethodException;
 import br.com.foursys.fourcamp.fourbank.model.CreditCard;
 import br.com.foursys.fourcamp.fourbank.model.CreditCardInstallment;
-import br.com.foursys.fourcamp.fourbank.model.PaymentMethod;
+import br.com.foursys.fourcamp.fourbank.model.Transaction;
 import br.com.foursys.fourcamp.fourbank.repository.CheckingAccountRepository;
 import br.com.foursys.fourcamp.fourbank.repository.CreditCardRepository;
-import br.com.foursys.fourcamp.fourbank.repository.PaymentMethodRepository;
+import br.com.foursys.fourcamp.fourbank.repository.TransactionRepository;
 import br.com.foursys.fourcamp.fourbank.repository.SavingsAccountRepository;
 import br.com.foursys.fourcamp.fourbank.util.PaymentMethodValidations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class PaymentMethodService {
+public class TransactionService {
 
-    private PaymentMethodRepository paymentMethodRepository;
+    private TransactionRepository paymentMethodRepository;
     @Autowired
     private SavingsAccountRepository savingsAccountRepository;
     @Autowired
@@ -33,19 +33,19 @@ public class PaymentMethodService {
     private CreditCardRepository creditCardRepository;
 
     @Autowired
-    public PaymentMethodService(PaymentMethodRepository paymentMethodRepository) {
+    public TransactionService(TransactionRepository paymentMethodRepository) {
         this.paymentMethodRepository = paymentMethodRepository;
     }
 
-    public MessageResponseDTO createPaymentMethod(PaymentMethod paymentMethod) throws InvalidParametersException,
+    public MessageResponseDTO createPaymentMethod(Transaction paymentMethod) throws InvalidParametersException,
             UnregisteredPaymentMethodException, AccountNotFoundException {
-        PaymentMethod savedPaymentMethod = getPaymentMethod(paymentMethod);
+        Transaction savedPaymentMethod = getPaymentMethod(paymentMethod);
         return createMessageResponse(savedPaymentMethod.getId(), "Criada ");
     }
 
-    public List<PaymentMethod> listAllByAccount(Integer accountId) {
-        List<PaymentMethod> paymentMethodList = new ArrayList<>();
-        for (PaymentMethod paymentMethod : paymentMethodRepository.findAll()) {
+    public List<Transaction> listAllByAccount(Integer accountId) {
+        List<Transaction> paymentMethodList = new ArrayList<>();
+        for (Transaction paymentMethod : paymentMethodRepository.findAll()) {
             if (paymentMethod.getOriginAccount().getId().equals(accountId)) {
                 paymentMethodList.add(paymentMethod);
             }
@@ -53,9 +53,9 @@ public class PaymentMethodService {
         return paymentMethodList;
     }
 
-    private PaymentMethod getPaymentMethod(PaymentMethod paymentMethod) throws InvalidParametersException,
+    private Transaction getPaymentMethod(Transaction paymentMethod) throws InvalidParametersException,
             UnregisteredPaymentMethodException, AccountNotFoundException {
-        PaymentMethod validPaymentMethod = paymentMethodIsValid(paymentMethod);
+        Transaction validPaymentMethod = paymentMethodIsValid(paymentMethod);
         return paymentMethodRepository.save(paymentMethod);
     }
 
@@ -65,54 +65,54 @@ public class PaymentMethodService {
                 .build();
     }
 
-    private PaymentMethod verifyIfExists(Long id) throws PaymentNotFoundException {
+    private Transaction verifyIfExists(Long id) throws PaymentNotFoundException {
         return paymentMethodRepository.findById(id).
                 orElseThrow(() ->  new PaymentNotFoundException(id));
     }
 
-    private PaymentMethod paymentMethodIsValid(PaymentMethod paymentMethod) throws InvalidParametersException,
+    private Transaction paymentMethodIsValid(Transaction paymentMethod) throws InvalidParametersException,
             UnregisteredPaymentMethodException, AccountNotFoundException {
         validatePaymentMethod(paymentMethod);
         checkIfAccountHasMethod(paymentMethod);
         checkIfAccountIsRegistered(paymentMethod);
-        UpdateCreditCardInstallments(paymentMethod);
+       // UpdateCreditCardInstallments(paymentMethod);
         //checar limite do cartão de débito
         //Alterar limite do cartão de crédito, ou o saldo da conta
         return paymentMethod;
     }
 
-    private void UpdateCreditCardInstallments(PaymentMethod paymentMethod) {
+    /*private void UpdateCreditCardInstallments(Transaction paymentMethod) {
         if (paymentMethod.getType().equals(0)) {
             //Diogo irá criar o findByCardNumber
-            CreditCard creditCard = creditCardRepository.findByCardNumber(paymentMethod.getIdentifier());
+            CreditCard creditCard = creditCardRepository.findByNumber(paymentMethod.getIdentifier());
             CreditCardInstallment installment = new CreditCardInstallment(LocalDate.now(),
                     paymentMethod.getNumberOfInstallments());
             creditCard.getCreditCardInstallments().add(installment);
         }
-    }
+    }*/
 
-    private void checkIfAccountIsRegistered(PaymentMethod paymentMethod) throws AccountNotFoundException {
+    private void checkIfAccountIsRegistered(Transaction paymentMethod) throws AccountNotFoundException {
         if (savingsAccountRepository.findById(paymentMethod.getOriginAccount().getId()).isEmpty() ||
                 checkingAccountRepository.findById(paymentMethod.getOriginAccount().getId()).isEmpty() ) {
             throw new AccountNotFoundException(paymentMethod.getOriginAccount().getId());
         }
     }
 
-    private void checkIfAccountHasMethod(PaymentMethod paymentMethod) throws UnregisteredPaymentMethodException {
+    private void checkIfAccountHasMethod(Transaction paymentMethod) throws UnregisteredPaymentMethodException {
         if (!PaymentMethodValidations.checkPaymentBoundsToAccount(paymentMethod.getOriginAccount(),
                 paymentMethod.getType().getType(), paymentMethod.getIdentifier())){
             throw new UnregisteredPaymentMethodException();
         }
     }
 
-    private void validatePaymentMethod(PaymentMethod paymentMethod) throws InvalidParametersException {
+    private void validatePaymentMethod(Transaction paymentMethod) throws InvalidParametersException {
         if (!PaymentMethodValidations.paymentMethodValidation(paymentMethod.getType().getType(),
                 paymentMethod.getIdentifier())) {
             throw new InvalidParametersException();
         }
     }
 
-    public PaymentMethod findById(Long id) throws PaymentNotFoundException {
+    public Transaction findById(Long id) throws PaymentNotFoundException {
         return verifyIfExists(id);
     }
 
