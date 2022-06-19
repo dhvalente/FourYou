@@ -37,4 +37,6 @@ public class PaymentMethod implements Serializable{
     private Account destinationAccount;
     @NonNull
     private Double value;
+
+    private Integer numberOfInstallments;
 }
