@@ -12,7 +12,10 @@ public enum PaymentTypeEnum {
 	DEBIT(1),
 	PIX(2),
 	TED(3),
-	DOC(4);
+	DOC(4),
+	DEPOSIT(5),
+	WITHDRAW(6),
+	TRANSFER(7);
 	
 	private Integer type;
 }
