@@ -20,11 +20,9 @@ public class CheckingAccountService {
 		this.checkingAccountRepository = checkingAccountRepository;
 	}
 
-	public CheckingAccount findById(Integer id) {
-		Optional<CheckingAccount> obj = checkingAccountRepository.findById(id);
-		return obj.get();
+	public Optional<CheckingAccount> findById(Integer id) {
+		return checkingAccountRepository.findById(id);
 	}
-
 	public List<CheckingAccount> findAll() {
 
 		return checkingAccountRepository.findAll();
