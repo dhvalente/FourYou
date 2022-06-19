@@ -2,24 +2,20 @@ package br.com.foursys.fourcamp.fourbank.service;
 
 
 import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
-import br.com.foursys.fourcamp.fourbank.exceptions.AccountNotFoundException;
-import br.com.foursys.fourcamp.fourbank.exceptions.InvalidParametersException;
-import br.com.foursys.fourcamp.fourbank.exceptions.PaymentNotFoundException;
-import br.com.foursys.fourcamp.fourbank.exceptions.UnregisteredPaymentMethodException;
+import br.com.foursys.fourcamp.fourbank.exceptions.*;
 import br.com.foursys.fourcamp.fourbank.model.CreditCard;
-import br.com.foursys.fourcamp.fourbank.model.CreditCardInstallment;
+import br.com.foursys.fourcamp.fourbank.model.DebitCard;
 import br.com.foursys.fourcamp.fourbank.model.Transaction;
-import br.com.foursys.fourcamp.fourbank.repository.CheckingAccountRepository;
-import br.com.foursys.fourcamp.fourbank.repository.CreditCardRepository;
-import br.com.foursys.fourcamp.fourbank.repository.TransactionRepository;
-import br.com.foursys.fourcamp.fourbank.repository.SavingsAccountRepository;
+import br.com.foursys.fourcamp.fourbank.repository.*;
 import br.com.foursys.fourcamp.fourbank.util.PaymentMethodValidations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import static br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum.CREDIT;
+import static br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum.DEBIT;
 
 @Service
 public class TransactionService {
@@ -31,6 +27,10 @@ public class TransactionService {
     private CheckingAccountRepository checkingAccountRepository;
     @Autowired
     private CreditCardRepository creditCardRepository;
+    @Autowired
+    private CreditCardService creditCardService;
+    @Autowired
+    private DebitCardRepository debitCardRepository;
 
     @Autowired
     public TransactionService(TransactionRepository paymentMethodRepository) {
@@ -38,7 +38,8 @@ public class TransactionService {
     }
 
     public MessageResponseDTO createPaymentMethod(Transaction paymentMethod) throws InvalidParametersException,
-            UnregisteredPaymentMethodException, AccountNotFoundException {
+            UnregisteredPaymentMethodException, AccountNotFoundException, CardNotFoundException,
+            CreditLimitInsufficientException {
         Transaction savedPaymentMethod = getPaymentMethod(paymentMethod);
         return createMessageResponse(savedPaymentMethod.getId(), "Criada ");
     }
@@ -54,9 +55,10 @@ public class TransactionService {
     }
 
     private Transaction getPaymentMethod(Transaction paymentMethod) throws InvalidParametersException,
-            UnregisteredPaymentMethodException, AccountNotFoundException {
+            UnregisteredPaymentMethodException, AccountNotFoundException, CardNotFoundException,
+            CreditLimitInsufficientException {
         Transaction validPaymentMethod = paymentMethodIsValid(paymentMethod);
-        return paymentMethodRepository.save(paymentMethod);
+        return paymentMethodRepository.save(validPaymentMethod);
     }
 
     private MessageResponseDTO createMessageResponse(Long id, String s) {
@@ -71,13 +73,14 @@ public class TransactionService {
     }
 
     private Transaction paymentMethodIsValid(Transaction paymentMethod) throws InvalidParametersException,
-            UnregisteredPaymentMethodException, AccountNotFoundException {
+            UnregisteredPaymentMethodException, AccountNotFoundException, CardNotFoundException,
+            CreditLimitInsufficientException {
         validatePaymentMethod(paymentMethod);
         checkIfAccountHasMethod(paymentMethod);
         checkIfAccountIsRegistered(paymentMethod);
+        checkIfCreditCardHasLimit(paymentMethod);
+        checkIfDebitCardHasLimit(paymentMethod);
        // UpdateCreditCardInstallments(paymentMethod);
-        //checar limite do cartão de débito
-        //Alterar limite do cartão de crédito, ou o saldo da conta
         return paymentMethod;
     }
 
@@ -109,6 +112,23 @@ public class TransactionService {
         if (!PaymentMethodValidations.paymentMethodValidation(paymentMethod.getType().getType(),
                 paymentMethod.getIdentifier())) {
             throw new InvalidParametersException();
+        }
+
+    }
+
+    private void checkIfCreditCardHasLimit(Transaction paymentMethod) throws CardNotFoundException,
+            CreditLimitInsufficientException {
+        if (paymentMethod.getType().equals(CREDIT)) {
+            CreditCard creditCard = creditCardRepository.findByNumber(paymentMethod.getIdentifier());
+            creditCardService.assertCreditCardStillHasLimit(paymentMethod.getValue(), creditCard.getId());
+        }
+    }
+
+    private void checkIfDebitCardHasLimit(Transaction paymentMethod) throws CardNotFoundException,
+            CreditLimitInsufficientException {
+        if (paymentMethod.getType().equals(DEBIT)) {
+            DebitCard debitCard = debitCardRepository.findByNumber(paymentMethod.getIdentifier());
+            creditCardService.assertCreditCardStillHasLimit(paymentMethod.getValue(), debitCard.getId());
         }
     }
 

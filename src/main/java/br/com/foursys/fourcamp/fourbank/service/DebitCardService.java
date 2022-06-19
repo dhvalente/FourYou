@@ -4,7 +4,6 @@ import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
 import br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum;
 import br.com.foursys.fourcamp.fourbank.exceptions.CardNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.CreditLimitInsufficientException;
-import br.com.foursys.fourcamp.fourbank.model.CreditCard;
 import br.com.foursys.fourcamp.fourbank.model.DebitCard;
 import br.com.foursys.fourcamp.fourbank.model.Transaction;
 import br.com.foursys.fourcamp.fourbank.repository.DebitCardRepository;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.List;
 
 @Service
@@ -77,14 +75,16 @@ public class DebitCardService {
 		return debitCardRepository.findByNumber(number);
 	}
 
-	public void discountDebitDayLimit(Double valor, Long id) throws CardNotFoundException {
-		DebitCard debitCard = verifyIfExists(id);
+	public Boolean assertDebitCardHasLimit(Double transactionValue, Long cardId) throws CardNotFoundException,
+			CreditLimitInsufficientException {
+		DebitCard debitCard = verifyIfExists(cardId);
 		Double currentMonthValueTransaction = verifyDebitDayLimit();
 		Double debitLimit = debitCard.getLimitByTransaction();
 		Double currentLimit = debitLimit - currentMonthValueTransaction;
-		if (valor > currentLimit) {
+		if (transactionValue > currentLimit) {
 			throw new CreditLimitInsufficientException();
 		}
+		return true;
 	}
 
 	public Double verifyDebitDayLimit() {

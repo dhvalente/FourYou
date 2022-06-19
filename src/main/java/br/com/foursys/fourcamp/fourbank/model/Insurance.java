@@ -8,10 +8,7 @@ import lombok.NonNull;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -31,6 +28,10 @@ public class Insurance implements Serializable {
 
 	@NonNull
 	private String rules;
+
+	@ManyToOne
+	@JoinColumn(name="tb_creditcard_id", nullable=false)
+	private CreditCard creditCard;
 
 	public void registerInsurance(String name, String rules) {
 		// todo

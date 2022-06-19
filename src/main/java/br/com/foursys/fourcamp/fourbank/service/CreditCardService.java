@@ -4,22 +4,16 @@ import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
 import br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum;
 import br.com.foursys.fourcamp.fourbank.exceptions.CardNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.CreditLimitInsufficientException;
-import br.com.foursys.fourcamp.fourbank.exceptions.UptadeStatusInvalidParametersException;
 import br.com.foursys.fourcamp.fourbank.model.CreditCard;
 import br.com.foursys.fourcamp.fourbank.model.Transaction;
 import br.com.foursys.fourcamp.fourbank.repository.CreditCardRepository;
 import br.com.foursys.fourcamp.fourbank.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.QueryAnnotation;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CreditCardService {
@@ -82,13 +76,14 @@ public class CreditCardService {
 		return creditCardRepository.findByNumber(number);
 	}
 
-	public boolean discountCreditLimit(Double valor, Long id) throws CardNotFoundException {
-		CreditCard creditCard = verifyIfExists(id);
+	public boolean assertCreditCardStillHasLimit(Double transactionValue, Long creditCardId) throws CardNotFoundException,
+			CreditLimitInsufficientException {
+		CreditCard creditCard = verifyIfExists(creditCardId);
 		Double currentMonthValueTransaction = verifyMonthCreditLimit();
 		Double creditLimit = creditCard.getCreditLimit();
 		Double currentLimit = creditLimit - currentMonthValueTransaction;
-		if (valor > currentLimit) {
-			throw new CreditLimitInsufficientException();			
+		if (transactionValue > currentLimit) {
+			throw new CreditLimitInsufficientException();
 		}
 		return true;
 	}
@@ -115,7 +110,6 @@ public class CreditCardService {
 			creditCard.setActive(false);
 			creditCardRepository.save(creditCard);
 		}
-
 		return creditCardRepository.save(creditCard);
 	}
 

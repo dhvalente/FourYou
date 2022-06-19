@@ -1,7 +1,7 @@
 package br.com.foursys.fourcamp.fourbank.model;
 
-
 import br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

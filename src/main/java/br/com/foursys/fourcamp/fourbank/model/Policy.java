@@ -22,9 +22,9 @@ public class Policy implements Serializable{
 	@Id
     @Column(name = "nrpolicy", nullable = false)
     private Long id;
-    @NonNull
+
+    @ManyToOne
     private CreditCard creditCard;
-    //OnetoOne?
     @OneToOne
     @JoinColumn(name = "insurance_id")
     private Insurance insurance;
