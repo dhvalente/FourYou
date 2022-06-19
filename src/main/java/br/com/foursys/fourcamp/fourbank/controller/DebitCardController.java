@@ -60,4 +60,10 @@ public class DebitCardController {
 		return debitCardService.updateStatus(status , id);
 
 	}
+	
+	@PutMapping("/updatelimit/{id}/{limit}")
+	public DebitCard updateStatus(@PathVariable Long id, @PathVariable Double limit) throws CardNotFoundException {
+		return debitCardService.updateLimitByTransaction(limit, id);
+
+	}
 }

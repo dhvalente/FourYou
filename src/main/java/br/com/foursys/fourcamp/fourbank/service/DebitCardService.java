@@ -76,7 +76,7 @@ public class DebitCardService {
 		return debitCardRepository.findByNumber(number);
 	}
 	
-	public void discountCreditLimit(Double valor, Long id) throws CardNotFoundException{
+	public void discountDebitDayLimit(Double valor, Long id) throws CardNotFoundException{
 		DebitCard debitCard = verifyIfExists(id);
 		Double currentMonthValueTransaction = verifyDebitDayLimit();
 		Double debitLimit = debitCard.getLimitByTransaction();	
@@ -109,6 +109,12 @@ public class DebitCardService {
 			debitCardRepository.save(debitCard);
 		}
 		
+		return debitCardRepository.save(debitCard);
+	}
+	
+	public DebitCard updateLimitByTransaction(Double limit , Long id) throws CardNotFoundException {
+		DebitCard debitCard = verifyIfExists(id);	
+			debitCard.setLimitByTransaction(limit);
 		return debitCardRepository.save(debitCard);
 	}
 
