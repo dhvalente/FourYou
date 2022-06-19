@@ -1,24 +1,26 @@
 package br.com.foursys.fourcamp.fourbank.service;
 
+
 import br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum;
-import br.com.foursys.fourcamp.fourbank.model.SavingsAccount;
+import br.com.foursys.fourcamp.fourbank.model.CheckingAccount;
 import br.com.foursys.fourcamp.fourbank.model.Transaction;
 import br.com.foursys.fourcamp.fourbank.repository.TransactionAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TransactionAccountService {
+public class TransactionCheckingAccountService {
 
-    @Autowired
-    SavingsAccountService savingsAccountService;
     @Autowired
     TransactionAccountRepository transactionAccountRepository;
 
+    @Autowired
+    CheckingAccountService checkingAccountService;
+
     public Object depositValue(Integer accountId, Double depositValue) {
-        SavingsAccount savingsAccount = savingsAccountService.findById(accountId).get();
-        savingsAccount.setBalance(savingsAccount.getBalance() + depositValue);
-        savingsAccountService.save(savingsAccount);
+        CheckingAccount checkingAccount = checkingAccountService.findById(accountId).get();
+        checkingAccount.setBalance(checkingAccount.getBalance() + depositValue);
+        checkingAccountService.save(checkingAccount);
 
         Transaction transaction = new Transaction();
         transaction.setPaymentTypeEnum(PaymentTypeEnum.DEPOSIT);
@@ -27,14 +29,14 @@ public class TransactionAccountService {
         transaction.setReceiverId(accountId);
         transactionAccountRepository.save(transaction);
 
-        return savingsAccount;
+        return checkingAccount;
     }
 
     public Object withdrawValue(Integer accountId, Double withdrawValue) {
-        SavingsAccount account = savingsAccountService.findById(accountId).get();
+        CheckingAccount account = checkingAccountService.findById(accountId).get();
         if (account.getBalance() >= withdrawValue) {
             account.setBalance(account.getBalance() - withdrawValue);
-            savingsAccountService.save(account);
+            checkingAccountService.save(account);
 
             Transaction transaction = new Transaction();
             transaction.setPaymentTypeEnum(PaymentTypeEnum.WITHDRAW);
@@ -50,13 +52,13 @@ public class TransactionAccountService {
     }
 
     public Object transferValue(Integer payerId, Integer receiverId, Double transferValue) {
-        SavingsAccount accountPayer = savingsAccountService.findById(payerId).get();
-        SavingsAccount accountReceiver = savingsAccountService.findById(receiverId).get();
+        CheckingAccount accountPayer = checkingAccountService.findById(payerId).get();
+        CheckingAccount accountReceiver = checkingAccountService.findById(receiverId).get();
         if (accountPayer.getBalance() >= transferValue) {
             accountPayer.setBalance(accountPayer.getBalance() - transferValue);
-            savingsAccountService.save(accountPayer);
+            checkingAccountService.save(accountPayer);
             accountReceiver.setBalance(accountReceiver.getBalance() + transferValue);
-            savingsAccountService.save(accountReceiver);
+            checkingAccountService.save(accountReceiver);
 
             Transaction transaction = new Transaction();
             transaction.setPaymentTypeEnum(PaymentTypeEnum.TRANSFER);

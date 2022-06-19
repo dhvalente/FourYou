@@ -1,16 +1,17 @@
 package br.com.foursys.fourcamp.fourbank.controller;
 
 
+import br.com.foursys.fourcamp.fourbank.model.CheckingAccount;
+import br.com.foursys.fourcamp.fourbank.service.CheckingAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.foursys.fourcamp.fourbank.model.CheckingAccount;
-import br.com.foursys.fourcamp.fourbank.service.CheckingAccountService;
-
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/checkingaccount")
@@ -27,8 +28,9 @@ public class CheckingAccountController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<CheckingAccount> findById(@PathVariable Integer id) {
-        CheckingAccount obj = service.findById(id);
-        return ResponseEntity.ok().body(obj);
+        Optional<CheckingAccount> obj = service.findById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(obj.get());
     }
 
     @PostMapping
