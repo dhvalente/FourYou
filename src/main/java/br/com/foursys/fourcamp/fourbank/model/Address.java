@@ -35,7 +35,6 @@ public class Address implements Serializable {
 	private String zipcode;
 	@JsonIgnore
 	@OneToOne
-	@MapsId
 	private Customer customer;
 	
 }

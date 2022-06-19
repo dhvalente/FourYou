@@ -2,6 +2,7 @@ package br.com.foursys.fourcamp.fourbank.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
@@ -15,11 +16,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerService {
-	
+	@Autowired
 	private CustomerRepository customerRepository;
 	
 	public MessageResponseDTO createCustomer(Customer customer) {
-		Customer savedCustomer = getCustomer(customer);
+		Customer savedCustomer = getCustomer(customer);	
 		return createMessageResponse(savedCustomer.getId(), "Criado ");
 	}
 	
@@ -52,6 +53,7 @@ public class CustomerService {
 	}
 	
 	private Customer getCustomer(Customer customer) {
+		customer.setAge(customer.setAgeAuto(customer.getDateOfBirth()));
 		return customerRepository.save(customer);
 	}
 	

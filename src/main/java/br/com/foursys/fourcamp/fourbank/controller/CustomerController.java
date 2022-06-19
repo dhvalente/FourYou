@@ -16,14 +16,13 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/Customer")
-
+@RequestMapping("/customer")
 public class CustomerController {
 	
 	@Autowired
 	private final CustomerService customerService;
 	
-	@PostMapping("/{id}")
+	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public MessageResponseDTO createCliente(@RequestBody Customer customer) {
 		return customerService.createCustomer(customer);

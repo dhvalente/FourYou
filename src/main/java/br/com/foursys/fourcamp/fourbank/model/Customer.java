@@ -5,6 +5,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.*;
 import br.com.foursys.fourcamp.fourbank.enums.CustomerTypeEnum;
 
@@ -36,7 +39,6 @@ public class Customer implements Serializable {
 
 	@OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
 	private Address address;
-
 	public Customer(Long id, String name, String dateOfBirth, String cpf, String nCell, Double income, String email,
 			String password, CustomerTypeEnum type, String imgUrl) {
 		this.id = id;
@@ -49,10 +51,10 @@ public class Customer implements Serializable {
 		this.password = password;
 		this.type = type;
 		this.imgUrl = imgUrl;
-		this.age = setAge(dateOfBirth);
+		this.age = null;
 	}
 
-	public Integer setAge(String dateOfBirth) {
+	public Integer setAgeAuto(String dateOfBirth) {
 		DateTimeFormatter inputFormatData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		LocalDate dateOfBirthFormated = LocalDate.parse(dateOfBirth, inputFormatData);
 		LocalDateTime today = LocalDateTime.now();
