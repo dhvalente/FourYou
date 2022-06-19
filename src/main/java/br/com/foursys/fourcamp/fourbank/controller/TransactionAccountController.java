@@ -3,6 +3,7 @@ package br.com.foursys.fourcamp.fourbank.controller;
 import br.com.foursys.fourcamp.fourbank.dto.DepositDto;
 import br.com.foursys.fourcamp.fourbank.dto.TransferDTO;
 import br.com.foursys.fourcamp.fourbank.dto.WithdrawDTO;
+import br.com.foursys.fourcamp.fourbank.exceptions.InsufficientFundsException;
 import br.com.foursys.fourcamp.fourbank.service.TransactionCheckingAccountService;
 import br.com.foursys.fourcamp.fourbank.service.TransactionSavingsAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +42,12 @@ public class TransactionAccountController {
         return transactionCheckingAccountService.depositValue(depositDto.getAccountId(), depositDto.getDepositValue());
     }
     @PostMapping("/checking/withdraw")
-    public Object withdrawValueChecking(@RequestBody WithdrawDTO withdrawDto){
+    public Object withdrawValueChecking(@RequestBody WithdrawDTO withdrawDto) throws InsufficientFundsException {
         return transactionCheckingAccountService.withdrawValue(withdrawDto.getAccountId(), withdrawDto.getWithdrawValue());
     }
 
     @PostMapping("/checking/transfer")
-    public Object transferValueChecking(@RequestBody TransferDTO transferDTO){
+    public Object transferValueChecking(@RequestBody TransferDTO transferDTO) throws InsufficientFundsException {
         return transactionCheckingAccountService.transferValue(transferDTO.getPayerId(), transferDTO.getReceiverId(),
                 transferDTO.getTransferValue());
     }

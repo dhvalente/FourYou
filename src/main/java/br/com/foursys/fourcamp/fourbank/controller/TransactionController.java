@@ -1,11 +1,12 @@
 package br.com.foursys.fourcamp.fourbank.controller;
 
-import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
 import br.com.foursys.fourcamp.fourbank.exceptions.*;
 import br.com.foursys.fourcamp.fourbank.model.Transaction;
 import br.com.foursys.fourcamp.fourbank.service.TransactionService;
+import br.com.foursys.fourcamp.fourbank.util.ResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,11 +24,22 @@ public class TransactionController {
     }
 
     @PostMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public MessageResponseDTO createPaymentMethod(@RequestBody Transaction paymentMethod) throws
-            UnregisteredPaymentMethodException, InvalidParametersException, AccountNotFoundException,
-            CardNotFoundException, CreditLimitInsufficientException {
-        return paymentMethodService.createPaymentMethod(paymentMethod);
+    public ResponseEntity<Object> createPaymentMethod(@RequestBody Transaction paymentMethod) {
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(paymentMethodService.createPaymentMethod(paymentMethod));
+        } catch (InvalidParametersException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ResponseModel(HttpStatus.NOT_ACCEPTABLE,
+                    HttpStatus.NOT_ACCEPTABLE.value(), e.getMessage()));
+        } catch (UnregisteredPaymentMethodException e) {
+            return ResponseEntity.status(HttpStatus.FAILED_DEPENDENCY).body(new ResponseModel(HttpStatus.FAILED_DEPENDENCY,
+                    HttpStatus.FAILED_DEPENDENCY.value(), e.getMessage()));
+        } catch (AccountNotFoundException | CardNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(HttpStatus.NOT_FOUND,
+                    HttpStatus.NOT_FOUND.value(), e.getMessage()));
+        } catch (CreditLimitInsufficientException e) {
+            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(new ResponseModel(HttpStatus.PRECONDITION_FAILED,
+                    HttpStatus.PRECONDITION_FAILED.value(), e.getMessage()));
+        }
     }
 
     @GetMapping
@@ -36,8 +48,13 @@ public class TransactionController {
     }
 
     @GetMapping("/{id}")
-    public Transaction findById(@PathVariable Long id) throws PaymentNotFoundException {
-        return paymentMethodService.findById(id);
+    public ResponseEntity<Object> findById(@PathVariable Long id) throws TransactionNotFoundException {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(paymentMethodService.findById(id));
+        } catch (TransactionNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(HttpStatus.NOT_FOUND,
+                    HttpStatus.NOT_FOUND.value(), e.getMessage()));
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package br.com.foursys.fourcamp.fourbank.service;
 
 import br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum;
+import br.com.foursys.fourcamp.fourbank.exceptions.InsufficientFundsException;
 import br.com.foursys.fourcamp.fourbank.model.SavingsAccount;
 import br.com.foursys.fourcamp.fourbank.model.TransactionAccount;
 import br.com.foursys.fourcamp.fourbank.repository.TransactionAccountRepository;
@@ -30,7 +31,7 @@ public class TransactionSavingsAccountService {
         return savingsAccount;
     }
 
-    public Object withdrawValue(Integer accountId, Double withdrawValue) {
+    public Object withdrawValue(Integer accountId, Double withdrawValue) throws InsufficientFundsException {
         SavingsAccount account = savingsAccountService.findById(accountId).get();
         if (account.getBalance() >= withdrawValue) {
             account.setBalance(account.getBalance() - withdrawValue);
@@ -45,11 +46,11 @@ public class TransactionSavingsAccountService {
 
             return account;
         } else {
-            return null;
+            throw new InsufficientFundsException();
         }
     }
 
-    public Object transferValue(Integer payerId, Integer receiverId, Double transferValue) {
+    public Object transferValue(Integer payerId, Integer receiverId, Double transferValue) throws InsufficientFundsException {
         SavingsAccount accountPayer = savingsAccountService.findById(payerId).get();
         SavingsAccount accountReceiver = savingsAccountService.findById(receiverId).get();
         if (accountPayer.getBalance() >= transferValue) {
@@ -67,7 +68,7 @@ public class TransactionSavingsAccountService {
 
             return accountPayer;
         } else {
-            return null;
+            throw new InsufficientFundsException();
         }
 
     }
