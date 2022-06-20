@@ -4,10 +4,7 @@ import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
 import br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum;
 import br.com.foursys.fourcamp.fourbank.exceptions.CardNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.CreditLimitInsufficientException;
-import br.com.foursys.fourcamp.fourbank.model.CheckingAccount;
-import br.com.foursys.fourcamp.fourbank.model.CreditCard;
-import br.com.foursys.fourcamp.fourbank.model.Insurance;
-import br.com.foursys.fourcamp.fourbank.model.Transaction;
+import br.com.foursys.fourcamp.fourbank.model.*;
 import br.com.foursys.fourcamp.fourbank.repository.CheckingAccountRepository;
 import br.com.foursys.fourcamp.fourbank.repository.CreditCardRepository;
 import br.com.foursys.fourcamp.fourbank.repository.TransactionRepository;
@@ -137,8 +134,12 @@ public class CreditCardService {
 		insuranceService.registerInsurance(rules, creditCard);
 		return insurance.getPolicy().getPolicyNumber();
 	}
-	
 
+	public CreditCard updatePassword(Long id, String password) throws CardNotFoundException {
+		CreditCard creditCard = verifyIfExists(id);
+		creditCard.setPassword(password);
+		return creditCardRepository.save(creditCard);
+	}
 
 
 }

@@ -4,13 +4,10 @@ import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
 import br.com.foursys.fourcamp.fourbank.exceptions.CardNotFoundException;
 import br.com.foursys.fourcamp.fourbank.model.CreditCard;
 import br.com.foursys.fourcamp.fourbank.service.CreditCardService;
-import br.com.foursys.fourcamp.fourbank.util.ResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -75,4 +72,12 @@ public class CreditCardController {
 		return creditCardService.updateStatus(status , id);
 
 	}
+
+	@PutMapping("/updatepassword/{id}/{password}")
+	public CreditCard updatePassword(@PathVariable Long id, @PathVariable String password)
+			throws CardNotFoundException {
+		return creditCardService.updatePassword(id, password);
+
+	}
+
 }
