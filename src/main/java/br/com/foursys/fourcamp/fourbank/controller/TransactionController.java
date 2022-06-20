@@ -24,7 +24,7 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createPaymentMethod(@RequestBody Transaction paymentMethod) {
+    public ResponseEntity<Object> createTransaction(@RequestBody Transaction paymentMethod) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(paymentMethodService.createPaymentMethod(paymentMethod));
         } catch (InvalidParametersException e) {

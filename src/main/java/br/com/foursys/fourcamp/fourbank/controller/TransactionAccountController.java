@@ -6,7 +6,10 @@ import br.com.foursys.fourcamp.fourbank.dto.WithdrawDTO;
 import br.com.foursys.fourcamp.fourbank.exceptions.InsufficientFundsException;
 import br.com.foursys.fourcamp.fourbank.service.TransactionCheckingAccountService;
 import br.com.foursys.fourcamp.fourbank.service.TransactionSavingsAccountService;
+import br.com.foursys.fourcamp.fourbank.util.ResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,32 +26,58 @@ public class TransactionAccountController {
     TransactionCheckingAccountService transactionCheckingAccountService;
 
     @PostMapping("/savings/deposit")
-    public Object DepositValueSavings(@RequestBody DepositDto depositDto){
-        return transactionSavingsService.depositValue(depositDto.getAccountId(), depositDto.getDepositValue());
+    public ResponseEntity<Object> DepositValueSavings(@RequestBody DepositDto depositDto){
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(transactionSavingsService.depositValue(depositDto.
+                getAccountId(), depositDto.getDepositValue()));
     }
     @PostMapping("/savings/withdraw")
-    public Object withdrawValueSavings(@RequestBody WithdrawDTO withdrawDto) throws InsufficientFundsException {
-        return transactionSavingsService.withdrawValue(withdrawDto.getAccountId(), withdrawDto.getWithdrawValue());
+    public ResponseEntity<Object> withdrawValueSavings(@RequestBody WithdrawDTO withdrawDto) {
+        try {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(transactionSavingsService.withdrawValue(withdrawDto.
+                    getAccountId(), withdrawDto.getWithdrawValue()));
+        } catch (InsufficientFundsException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ResponseModel(HttpStatus.NOT_ACCEPTABLE,
+                    HttpStatus.NOT_ACCEPTABLE.value(), e.getMessage()));
+        }
     }
 
     @PostMapping("/savings/transfer")
-    public Object transferValueSavings(@RequestBody TransferDTO transferDTO) throws InsufficientFundsException {
-        return transactionSavingsService.transferValue(transferDTO.getPayerId(), transferDTO.getReceiverId(),
-                transferDTO.getTransferValue());
+    public ResponseEntity<Object> transferValueSavings(@RequestBody TransferDTO transferDTO) {
+        try {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(transactionSavingsService.transferValue(transferDTO.
+                            getPayerId(), transferDTO.getReceiverId(), transferDTO.getTransferValue()));
+        } catch (InsufficientFundsException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ResponseModel(HttpStatus.NOT_ACCEPTABLE,
+                    HttpStatus.NOT_ACCEPTABLE.value(), e.getMessage()));
+        }
     }
 
     @PostMapping("/checking/deposit")
-    public Object DepositValueChecking(@RequestBody DepositDto depositDto){
-        return transactionCheckingAccountService.depositValue(depositDto.getAccountId(), depositDto.getDepositValue());
+    public ResponseEntity<Object> DepositValueChecking(@RequestBody DepositDto depositDto){
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(transactionCheckingAccountService.depositValue(
+                depositDto.getAccountId(), depositDto.getDepositValue()));
     }
     @PostMapping("/checking/withdraw")
-    public Object withdrawValueChecking(@RequestBody WithdrawDTO withdrawDto) throws InsufficientFundsException {
-        return transactionCheckingAccountService.withdrawValue(withdrawDto.getAccountId(), withdrawDto.getWithdrawValue());
+    public ResponseEntity<Object> withdrawValueChecking(@RequestBody WithdrawDTO withdrawDto) {
+        try {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(transactionCheckingAccountService.withdrawValue(
+                    withdrawDto.getAccountId(), withdrawDto.getWithdrawValue()));
+        } catch (InsufficientFundsException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ResponseModel(HttpStatus.NOT_ACCEPTABLE,
+                    HttpStatus.NOT_ACCEPTABLE.value(), e.getMessage()));
+        }
     }
 
     @PostMapping("/checking/transfer")
-    public Object transferValueChecking(@RequestBody TransferDTO transferDTO) throws InsufficientFundsException {
-        return transactionCheckingAccountService.transferValue(transferDTO.getPayerId(), transferDTO.getReceiverId(),
-                transferDTO.getTransferValue());
+    public ResponseEntity<Object> transferValueChecking(@RequestBody TransferDTO transferDTO) {
+        try {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(transactionCheckingAccountService.transferValue(
+                    transferDTO.getPayerId(), transferDTO.getReceiverId(), transferDTO.getTransferValue()));
+        } catch (InsufficientFundsException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ResponseModel(HttpStatus.NOT_ACCEPTABLE,
+                    HttpStatus.NOT_ACCEPTABLE.value(), e.getMessage()));
+        }
     }
+
+
 }

@@ -4,8 +4,10 @@ import br.com.foursys.fourcamp.fourbank.exceptions.PolicyNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.PolicyOrCardNotFoundException;
 import br.com.foursys.fourcamp.fourbank.model.Policy;
 import br.com.foursys.fourcamp.fourbank.service.PolicyService;
+import br.com.foursys.fourcamp.fourbank.util.ResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,8 +35,15 @@ public class PolicyController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable Long id) throws PolicyNotFoundException {
-        policyService.delete(id);
+    public ResponseEntity<Object> deleteById(@PathVariable Long id) throws PolicyNotFoundException {
+        try {
+            policyService.delete(id);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Apólice removida com sucesso!");
+        } catch (PolicyNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(HttpStatus.NOT_FOUND,
+                    HttpStatus.NOT_FOUND.value(), e.getMessage()));
+        }
+
     }
+
 }

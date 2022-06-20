@@ -1,23 +1,16 @@
 package br.com.foursys.fourcamp.fourbank.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
-import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
+import br.com.foursys.fourcamp.fourbank.exceptions.InvalidParametersException;
 import br.com.foursys.fourcamp.fourbank.exceptions.PixNotFoundException;
 import br.com.foursys.fourcamp.fourbank.model.Pix;
 import br.com.foursys.fourcamp.fourbank.service.PixService;
+import br.com.foursys.fourcamp.fourbank.util.ResponseModel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/pix")
@@ -33,8 +26,13 @@ public class PixController {
 
     @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public MessageResponseDTO createPix(@RequestBody Pix pix) {
-        return pixService.createPix(pix);
+    public ResponseEntity<Object> createPix(@RequestBody Pix pix) {
+        try {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(pixService.createPix(pix));
+        } catch (InvalidParametersException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ResponseModel(HttpStatus.NOT_ACCEPTABLE,
+                    HttpStatus.NOT_ACCEPTABLE.value(), e.getMessage()));
+        }
     }
 
     @GetMapping
@@ -43,19 +41,37 @@ public class PixController {
     }
 
     @GetMapping("/{id}")
-    public Pix findById(@PathVariable String id) throws PixNotFoundException {
-        return pixService.findById(id);
+    public ResponseEntity<Object> findById(@PathVariable String id) {
+        try {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(pixService.findById(id));
+        } catch (PixNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(HttpStatus.NOT_FOUND,
+                    HttpStatus.NOT_FOUND.value(), e.getMessage()));
+        }
     }
 
     @PutMapping("/{id}")
-    public MessageResponseDTO updateById(@PathVariable String id, @RequestBody Pix pix)
-            throws PixNotFoundException {
-        return pixService.updateById(id, pix);
+    public ResponseEntity<Object> updateById(@PathVariable String id, @RequestBody Pix pix) {
+        try {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(pixService.updateById(id, pix));
+        } catch (PixNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(HttpStatus.NOT_FOUND,
+                    HttpStatus.NOT_FOUND.value(), e.getMessage()));
+        } catch (InvalidParametersException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ResponseModel(HttpStatus.NOT_ACCEPTABLE,
+                    HttpStatus.NOT_ACCEPTABLE.value(), e.getMessage()));
+        }
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable String id) throws PixNotFoundException {
-        pixService.delete(id);
+    public ResponseEntity<Object> deleteById(@PathVariable String id) {
+        try {
+            pixService.delete(id);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Pix descadastrado com sucesso!");
+        } catch (PixNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(HttpStatus.NOT_FOUND,
+                    HttpStatus.NOT_FOUND.value(), e.getMessage()));
+        }
     }
+
 }

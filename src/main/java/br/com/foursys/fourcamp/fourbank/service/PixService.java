@@ -1,14 +1,15 @@
 package br.com.foursys.fourcamp.fourbank.service;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
+import br.com.foursys.fourcamp.fourbank.exceptions.InvalidParametersException;
 import br.com.foursys.fourcamp.fourbank.exceptions.PixNotFoundException;
 import br.com.foursys.fourcamp.fourbank.model.Pix;
 import br.com.foursys.fourcamp.fourbank.repository.PixRepository;
+import br.com.foursys.fourcamp.fourbank.util.PaymentMethodValidations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PixService {
@@ -20,7 +21,7 @@ public class PixService {
         this.pixRepository = pixRepository;
     }
 
-    public MessageResponseDTO createPix(Pix pix) {
+    public MessageResponseDTO createPix(Pix pix) throws InvalidParametersException {
         Pix savedPix = getPix(pix);
         return createMessageResponse(savedPix.getId(), "Created ");
     }
@@ -29,7 +30,7 @@ public class PixService {
         return pixRepository.findAll();
     }
 
-    public MessageResponseDTO updateById(String id, Pix pix) throws PixNotFoundException {
+    public MessageResponseDTO updateById(String id, Pix pix) throws PixNotFoundException, InvalidParametersException {
         verifyIfExists(id);
         Pix validPix = pixIsValid(pix);
         Pix updatedPix = getPix(validPix);
@@ -41,7 +42,7 @@ public class PixService {
         pixRepository.deleteById(id);
     }
 
-    private Pix getPix(Pix pix) {
+    private Pix getPix(Pix pix) throws InvalidParametersException {
         Pix validPix = pixIsValid(pix);
         return pixRepository.save(pix);
     }
@@ -57,9 +58,12 @@ public class PixService {
                 .orElseThrow(() -> new PixNotFoundException(id));
     }
 
-    private Pix pixIsValid(Pix pix) {
-        //validações
-        return pix;
+    private Pix pixIsValid(Pix pix) throws InvalidParametersException {
+        if (PaymentMethodValidations.validatePix(pix.getKeyContent())) {
+            return pix;
+        } else {
+            throw new InvalidParametersException();
+        }
     }
 
     public Pix findById(String id) throws PixNotFoundException {
