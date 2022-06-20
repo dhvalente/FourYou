@@ -2,6 +2,7 @@ package br.com.foursys.fourcamp.fourbank.controller;
 
 import java.util.List;
 
+import br.com.foursys.fourcamp.fourbank.exceptions.InsuranceOrCardNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,26 +32,15 @@ public class InsuranceController {
         this.insuranceService = insuranceService;
     }
 
-    @PostMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public MessageResponseDTO createInsurance(@RequestBody Insurance insurance) {
-        return insuranceService.createInsurance(insurance);
-    }
-
     @GetMapping
-    public List<Insurance> listAll() {
-        return insuranceService.listAll();
+    public List<Insurance> listAllByCreditCard(@PathVariable String creditCardNumber) throws
+            InsuranceOrCardNotFoundException {
+        return insuranceService.listAllByCreditCard(creditCardNumber);
     }
 
     @GetMapping("/{id}")
     public Insurance findById(@PathVariable Long id) throws InsuranceNotFoundException {
         return insuranceService.findById(id);
-    }
-
-    @PutMapping("/{id}")
-    public MessageResponseDTO updateById(@PathVariable Long id, @RequestBody Insurance insurance)
-            throws InsuranceNotFoundException {
-        return insuranceService.updateById(id, insurance);
     }
 
     @DeleteMapping("/{id}")

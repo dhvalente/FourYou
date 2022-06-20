@@ -1,15 +1,10 @@
 package br.com.foursys.fourcamp.fourbank.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-
-import java.io.Serializable;
-import java.util.Random;
+import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Random;
 
 @Entity
 @Data
