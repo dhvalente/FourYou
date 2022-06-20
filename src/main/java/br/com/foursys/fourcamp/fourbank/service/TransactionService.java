@@ -2,10 +2,20 @@ package br.com.foursys.fourcamp.fourbank.service;
 
 
 import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
+
 import br.com.foursys.fourcamp.fourbank.exceptions.*;
 import br.com.foursys.fourcamp.fourbank.model.CreditCard;
 import br.com.foursys.fourcamp.fourbank.model.DebitCard;
 import br.com.foursys.fourcamp.fourbank.model.Transaction;
+
+import br.com.foursys.fourcamp.fourbank.exceptions.AccountNotFoundException;
+import br.com.foursys.fourcamp.fourbank.exceptions.InvalidParametersException;
+import br.com.foursys.fourcamp.fourbank.exceptions.PaymentNotFoundException;
+import br.com.foursys.fourcamp.fourbank.exceptions.UnregisteredPaymentMethodException;
+import br.com.foursys.fourcamp.fourbank.model.PhoneRecharge;
+import br.com.foursys.fourcamp.fourbank.model.Transaction;
+import br.com.foursys.fourcamp.fourbank.model.TransactionAccount;
+
 import br.com.foursys.fourcamp.fourbank.repository.*;
 import br.com.foursys.fourcamp.fourbank.util.PaymentMethodValidations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +41,9 @@ public class TransactionService {
     private CreditCardService creditCardService;
     @Autowired
     private DebitCardRepository debitCardRepository;
+
+    @Autowired
+    private TransactionAccountRepository transactionAccountRepository;
 
     @Autowired
     public TransactionService(TransactionRepository paymentMethodRepository) {
@@ -136,6 +149,12 @@ public class TransactionService {
         return verifyIfExists(id);
     }
 
-
-
+    public void phoneRecharge(PhoneRecharge phoneRecharge) {
+        TransactionAccount transactionAccount = new TransactionAccount();
+        transactionAccount.setPaymentTypeEnum(phoneRecharge.getPaymentTypeEnum());
+        transactionAccount.setValue(phoneRecharge.getValueRecharge());
+        transactionAccount.setDescription("Efetuação de recarga no número: " + phoneRecharge.getPhoneNumber()
+                + " No valor de: " + phoneRecharge.getValueRecharge());
+        transactionAccountRepository.save(transactionAccount);
+    }
 }
