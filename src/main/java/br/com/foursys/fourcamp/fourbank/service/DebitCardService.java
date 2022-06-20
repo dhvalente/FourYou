@@ -123,8 +123,8 @@ public class DebitCardService {
 		return debitCardRepository.save(debitCard);
 	}
 	
-	public DebitCard updatePassword(String creditCardNumber, String password) throws CardNotFoundException {
-		DebitCard debitCard = debitCardRepository.findByNumber(creditCardNumber);
+	public DebitCard updatePassword(Long id, String password) throws CardNotFoundException {
+		DebitCard debitCard = verifyIfExists(id);
 		debitCard.setPassword(password);
 		return debitCardRepository.save(debitCard);
 	}

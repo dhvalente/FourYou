@@ -66,10 +66,10 @@ public class DebitCardController {
 
 	}
 	
-	@PutMapping("/updatepassword/{dcnumber}/{password}")
-	public DebitCard updatePassword(@PathVariable String debitCardNumber, @PathVariable String password)
+	@PutMapping("/updatepassword/{id}/{password}")
+	public DebitCard updatePassword(@PathVariable Long id, @PathVariable String password)
 			throws CardNotFoundException {
-		return debitCardService.updatePassword(debitCardNumber, password);
+		return debitCardService.updatePassword(id, password);
 
 	}
 	

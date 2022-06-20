@@ -111,18 +111,18 @@ public class TransactionService {
 	 */
 
 	private void checkIfAccountIsRegistered(Transaction transaction) throws AccountNotFoundException {
-		/*if (savingsAccountRepository.findById(transaction.getOriginAccount().getId()).isEmpty()
-				|| checkingAccountRepository.findById(transaction.getOriginAccount().getId()).isEmpty()) {
-			throw new AccountNotFoundException(transaction.getOriginAccount().getId());
-		}*/
-	}
+		Integer id = transaction.getOriginAccount().getId();
+		checkingAccountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
 
-	private void checkIfAccountHasMethod(Transaction transaction) throws UnregisteredPaymentMethodException {
-		/*if (!PaymentMethodValidations.checkPaymentBoundsToAccount(transaction.getOriginAccount(),
-				transaction.getType().getType(), transaction.getIdentifier())) {
-			throw new UnregisteredPaymentMethodException();
-		}*/
 	}
+	//to do dando erro "Cartão ou pix não registrado na Conta selecionada!"
+	private void checkIfAccountHasMethod(Transaction transaction) throws UnregisteredPaymentMethodException {		
+		 /*if (!PaymentMethodValidations.checkPaymentBoundsToAccount(transaction.
+		 getOriginAccount(), transaction.getType().getType(),
+		 transaction.getIdentifier())) { throw new
+		 UnregisteredPaymentMethodException(); }
+		 
+	*/}
 
 	private void validateTransaction(Transaction transaction) throws InvalidParametersException {
 		if (!PaymentMethodValidations.paymentMethodValidation(transaction.getType().getType(),
