@@ -2,10 +2,9 @@ package br.com.foursys.fourcamp.fourbank.service;
 
 
 import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
+import br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum;
 import br.com.foursys.fourcamp.fourbank.exceptions.*;
-import br.com.foursys.fourcamp.fourbank.model.CreditCard;
-import br.com.foursys.fourcamp.fourbank.model.DebitCard;
-import br.com.foursys.fourcamp.fourbank.model.Transaction;
+import br.com.foursys.fourcamp.fourbank.model.*;
 import br.com.foursys.fourcamp.fourbank.repository.*;
 import br.com.foursys.fourcamp.fourbank.util.PaymentMethodValidations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum.CREDIT;
-import static br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum.DEBIT;
+import static br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum.*;
 
 @Service
 public class TransactionService {
@@ -31,6 +29,10 @@ public class TransactionService {
     private CreditCardService creditCardService;
     @Autowired
     private DebitCardRepository debitCardRepository;
+    @Autowired
+    TransactionCheckingAccountService transactionCheckingAccountService;
+    @Autowired
+    TransactionSavingsAccountService transactionSavingsAccountService;
 
     @Autowired
     public TransactionService(TransactionRepository transactionRepository) {
@@ -39,7 +41,7 @@ public class TransactionService {
 
     public MessageResponseDTO createPaymentMethod(Transaction transaction) throws InvalidParametersException,
             UnregisteredPaymentMethodException, AccountNotFoundException, CardNotFoundException,
-            CreditLimitInsufficientException {
+            CreditLimitInsufficientException, InsufficientFundsException {
         Transaction savedTransaction = getPaymentMethod(transaction);
         return createMessageResponse(savedTransaction.getId(), "Criada ");
     }
@@ -56,7 +58,7 @@ public class TransactionService {
 
     private Transaction getPaymentMethod(Transaction transaction) throws InvalidParametersException,
             UnregisteredPaymentMethodException, AccountNotFoundException, CardNotFoundException,
-            CreditLimitInsufficientException {
+            CreditLimitInsufficientException, InsufficientFundsException {
         Transaction validTransaction = transactionIsValid(transaction);
         return transactionRepository.save(validTransaction);
     }
@@ -74,15 +76,33 @@ public class TransactionService {
 
     private Transaction transactionIsValid(Transaction transaction) throws InvalidParametersException,
             UnregisteredPaymentMethodException, AccountNotFoundException, CardNotFoundException,
-            CreditLimitInsufficientException {
+            CreditLimitInsufficientException, InsufficientFundsException {
         validateTransaction(transaction);
         checkIfAccountHasMethod(transaction);
         checkIfAccountIsRegistered(transaction);
         checkIfCreditCardHasLimit(transaction);
         checkIfDebitCardHasLimit(transaction);
-       // UpdateCreditCardInstallments(transaction);
-        //alterar saldo de contas caso pix, ted ou doc
+        updateAccountBalance(transaction);
+        // UpdateCreditCardInstallments(transaction);
         return transaction;
+    }
+
+    private void updateAccountBalance(Transaction transaction) throws InsufficientFundsException {
+        PaymentTypeEnum paymentTypeEnum = transaction.getType();
+        switch (paymentTypeEnum) {
+            case PIX, TED, DOC, TRANSFER -> {
+                Account account = transaction.getOriginAccount();
+                if (account instanceof CheckingAccount) {
+                    transactionCheckingAccountService.transferValue(account.getId(),
+                            transaction.getDestinationAccount().getId(), transaction.getValue());
+                } else if (account instanceof SavingsAccount) {
+                    transactionSavingsAccountService.transferValue(account.getId(),
+                            transaction.getDestinationAccount().getId(),
+                            transaction.getValue());
+                }
+            }
+        }
+
     }
 
     /*private void UpdateCreditCardInstallments(Transaction paymentMethod) {

@@ -33,10 +33,5 @@ public class Policy implements Serializable{
     @NonNull
     private String termsDescription;
 
-    public Integer generatePolicyNumber(CreditCard creditCard, Double policyValue, String termsDescription) {
-        //todo
-        return 0;
-    }
-
 }
 

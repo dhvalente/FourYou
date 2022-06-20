@@ -27,12 +27,12 @@ public class TransactionAccountController {
         return transactionSavingsService.depositValue(depositDto.getAccountId(), depositDto.getDepositValue());
     }
     @PostMapping("/savings/withdraw")
-    public Object withdrawValueSavings(@RequestBody WithdrawDTO withdrawDto){
+    public Object withdrawValueSavings(@RequestBody WithdrawDTO withdrawDto) throws InsufficientFundsException {
         return transactionSavingsService.withdrawValue(withdrawDto.getAccountId(), withdrawDto.getWithdrawValue());
     }
 
     @PostMapping("/savings/transfer")
-    public Object transferValueSavings(@RequestBody TransferDTO transferDTO){
+    public Object transferValueSavings(@RequestBody TransferDTO transferDTO) throws InsufficientFundsException {
         return transactionSavingsService.transferValue(transferDTO.getPayerId(), transferDTO.getReceiverId(),
                 transferDTO.getTransferValue());
     }

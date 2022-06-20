@@ -36,7 +36,7 @@ public class TransactionController {
         } catch (AccountNotFoundException | CardNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(HttpStatus.NOT_FOUND,
                     HttpStatus.NOT_FOUND.value(), e.getMessage()));
-        } catch (CreditLimitInsufficientException e) {
+        } catch (CreditLimitInsufficientException | InsufficientFundsException e) {
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(new ResponseModel(HttpStatus.PRECONDITION_FAILED,
                     HttpStatus.PRECONDITION_FAILED.value(), e.getMessage()));
         }
