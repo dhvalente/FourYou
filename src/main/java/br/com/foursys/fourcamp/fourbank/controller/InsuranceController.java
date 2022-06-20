@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
+import br.com.foursys.fourcamp.fourbank.exceptions.CardNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.InsuranceNotFoundException;
+import br.com.foursys.fourcamp.fourbank.model.CreditCard;
 import br.com.foursys.fourcamp.fourbank.model.Insurance;
 import br.com.foursys.fourcamp.fourbank.service.InsuranceService;
 
@@ -37,6 +39,12 @@ public class InsuranceController {
             InsuranceOrCardNotFoundException {
         return insuranceService.listAllByCreditCard(creditCardNumber);
     }
+    
+    @GetMapping("/list")
+    public List<Insurance> listAll() throws
+            InsuranceOrCardNotFoundException {
+        return insuranceService.listAll();
+    }
 
     @GetMapping("/{id}")
     public Insurance findById(@PathVariable Long id) throws InsuranceNotFoundException {
@@ -48,4 +56,10 @@ public class InsuranceController {
     public void deleteById(@PathVariable Long id) throws InsuranceNotFoundException {
         insuranceService.delete(id);
     }
+    
+	@PostMapping("/create/{id}/{rules}")
+	@ResponseStatus(HttpStatus.CREATED)
+	public MessageResponseDTO createInsurance(@PathVariable Long id, @PathVariable String rules) throws CardNotFoundException {
+		return insuranceService.createInsurance(rules, id);
+	}
 }

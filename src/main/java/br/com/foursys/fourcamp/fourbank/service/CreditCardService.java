@@ -133,7 +133,7 @@ public class CreditCardService {
 	
 	public int createInsuranceAndGeneratePolicyNumber(Long id , String rules, Insurance insurance) throws CardNotFoundException {
 		CreditCard creditCard =verifyIfExists(id);
-		insuranceService.registerInsurance(rules, insurance, creditCard);
+		insuranceService.registerInsurance(rules, creditCard);
 		return insurance.getPolicy().getPolicyNumber();
 	}
 	

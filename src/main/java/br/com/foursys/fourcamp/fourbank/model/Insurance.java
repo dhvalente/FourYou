@@ -11,6 +11,8 @@ import java.util.Date;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Data
 @Builder
@@ -21,7 +23,7 @@ public class Insurance implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "id", nullable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@NonNull
@@ -30,7 +32,7 @@ public class Insurance implements Serializable {
 	private Date date = new Date();
 
 	@ManyToOne
-	@JoinColumn(name="tb_creditcard_id", nullable=false)
+	@JoinColumn(name="tb_creditcard_id")
 	private CreditCard creditCard;
 	
 	@OneToOne

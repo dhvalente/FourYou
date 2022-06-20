@@ -50,7 +50,7 @@ public class CreditCard implements Serializable{
 	private Double limitByTransaction;
 
 	private Double creditLimit;
-
+	@JsonIgnore
 	@OneToMany(mappedBy = "creditCard")
 	private List<Insurance> insuranceProducts = new ArrayList<Insurance>();
 

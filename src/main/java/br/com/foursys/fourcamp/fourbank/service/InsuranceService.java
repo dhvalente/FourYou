@@ -2,6 +2,7 @@ package br.com.foursys.fourcamp.fourbank.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import br.com.foursys.fourcamp.fourbank.exceptions.InsuranceOrCardNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.PolicyOrCardNotFoundException;
@@ -10,10 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
+import br.com.foursys.fourcamp.fourbank.exceptions.CardNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.InsuranceNotFoundException;
 import br.com.foursys.fourcamp.fourbank.model.CreditCard;
 import br.com.foursys.fourcamp.fourbank.model.Insurance;
 import br.com.foursys.fourcamp.fourbank.model.Policy;
+import br.com.foursys.fourcamp.fourbank.repository.CreditCardRepository;
 import br.com.foursys.fourcamp.fourbank.repository.InsuranceRepository;
 import br.com.foursys.fourcamp.fourbank.repository.PolicyRepository;
 
@@ -23,14 +26,18 @@ public class InsuranceService {
 	private InsuranceRepository insuranceRepository;
 	@Autowired
 	private PolicyRepository policyRepository;
+	
+	@Autowired
+	private CreditCardService creditCardService;
 
 	@Autowired
 	public InsuranceService(InsuranceRepository insuranceRepository) {
 		this.insuranceRepository = insuranceRepository;
 	}
 
-	public MessageResponseDTO createInsurance(Insurance insurance) {
-		Insurance savedInsurance = getInsurance(insurance);
+	public MessageResponseDTO createInsurance(String rules, Long id) throws CardNotFoundException {
+		CreditCard creditCard = creditCardService.findById(id);
+		Insurance savedInsurance = registerInsurance(rules, creditCard);
 		return createMessageResponse(savedInsurance.getId(), "Created ");
 	}
 
@@ -83,31 +90,40 @@ public class InsuranceService {
 		return verifyIfExists(id);
 	}
 
-	public void registerInsurance(String rules, Insurance insurance, CreditCard creditCard) {
-
+	public Insurance registerInsurance(String rules, CreditCard creditCard) {
+		Insurance insurance = new Insurance();
+		insuranceRepository.save(insurance);
 		Integer policyNumber = insurance.getPolicy().generatePolicyNumber();
 		switch (rules) {
-		case "automovel":
+		case "card":
 			insurance.setRules(rules);
-			Policy policyAutomovel = new Policy(null, creditCard, insurance, 35.00, "Automóvel no valor minímo de 10 salários minímos", policyNumber);			
+			Policy policyAutomovel = new Policy(creditCard, insurance, 35.00, "Seguro contra roubo valor do reembolso equivalente à 10 salários minímos");			
 			policyRepository.save(policyAutomovel);
+			insurance.setPolicy(policyAutomovel);
+			insurance.setCreditCard(creditCard);
 			insuranceRepository.save(insurance);
 			break;
 		case "vida":
 			insurance.setRules(rules);
-			Policy policyVida = new Policy(null, creditCard, insurance, 48.00, "Não pode ser acionado para pessoas com profissões de risco", policyNumber);			
+			Policy policyVida = new Policy(creditCard, insurance, 48.00, "Não pode ser acionado para pessoas com profissões de risco");			
 			policyRepository.save(policyVida);
+			insurance.setPolicy(policyVida);
+			insurance.setCreditCard(creditCard);
 			insuranceRepository.save(insurance);
 			break;
 		case "residencial":
 			insurance.setRules(rules);
-			Policy policyResidencial = new Policy(null, creditCard, insurance, 48.00, "Não pode ser acionado para pessoas com profissões de risco", policyNumber);			
+			Policy policyResidencial = new Policy(creditCard, insurance, 113.00, "Não pode ser acionado para pessoas com profissões de risco");			
 			policyRepository.save(policyResidencial);
+			insurance.setPolicy(policyResidencial);
+			insurance.setCreditCard(creditCard);
 			insuranceRepository.save(insurance);
 			break;
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + rules);
 		}
+		insuranceRepository.save(insurance);
+		return insurance;
 	}
 
     private Insurance verifyIfExists(Long id) throws InsuranceNotFoundException {
