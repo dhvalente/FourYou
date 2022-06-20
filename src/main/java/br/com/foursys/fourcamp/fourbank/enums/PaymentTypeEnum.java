@@ -15,7 +15,9 @@ public enum PaymentTypeEnum {
 	DOC(4),
 	DEPOSIT(5),
 	WITHDRAW(6),
-	TRANSFER(7);
-	
+	TRANSFER(7),
+
+	PHONE_RECHARGE(8);
+
 	private Integer type;
 }

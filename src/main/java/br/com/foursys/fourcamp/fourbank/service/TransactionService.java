@@ -6,18 +6,14 @@ import br.com.foursys.fourcamp.fourbank.exceptions.AccountNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.InvalidParametersException;
 import br.com.foursys.fourcamp.fourbank.exceptions.PaymentNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.UnregisteredPaymentMethodException;
-import br.com.foursys.fourcamp.fourbank.model.CreditCard;
-import br.com.foursys.fourcamp.fourbank.model.CreditCardInstallment;
+import br.com.foursys.fourcamp.fourbank.model.PhoneRecharge;
 import br.com.foursys.fourcamp.fourbank.model.Transaction;
-import br.com.foursys.fourcamp.fourbank.repository.CheckingAccountRepository;
-import br.com.foursys.fourcamp.fourbank.repository.CreditCardRepository;
-import br.com.foursys.fourcamp.fourbank.repository.TransactionRepository;
-import br.com.foursys.fourcamp.fourbank.repository.SavingsAccountRepository;
+import br.com.foursys.fourcamp.fourbank.model.TransactionAccount;
+import br.com.foursys.fourcamp.fourbank.repository.*;
 import br.com.foursys.fourcamp.fourbank.util.PaymentMethodValidations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +27,9 @@ public class TransactionService {
     private CheckingAccountRepository checkingAccountRepository;
     @Autowired
     private CreditCardRepository creditCardRepository;
+
+    @Autowired
+    private TransactionAccountRepository transactionAccountRepository;
 
     @Autowired
     public TransactionService(TransactionRepository paymentMethodRepository) {
@@ -116,6 +115,12 @@ public class TransactionService {
         return verifyIfExists(id);
     }
 
-
-
+    public void phoneRecharge(PhoneRecharge phoneRecharge) {
+        TransactionAccount transactionAccount = new TransactionAccount();
+        transactionAccount.setPaymentTypeEnum(phoneRecharge.getPaymentTypeEnum());
+        transactionAccount.setValue(phoneRecharge.getValueRecharge());
+        transactionAccount.setDescription("Efetuação de recarga no número: " + phoneRecharge.getPhoneNumber()
+                + " No valor de: " + phoneRecharge.getValueRecharge());
+        transactionAccountRepository.save(transactionAccount);
+    }
 }
