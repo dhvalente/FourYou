@@ -88,15 +88,26 @@ public class TransactionService {
 
 	private void updateAccountBalance(Transaction transaction) throws InsufficientFundsException {
 		PaymentTypeEnum paymentTypeEnum = transaction.getType();
+		Double transactionValue = transaction.getValue();
 		switch (paymentTypeEnum) {
-		case PIX, TED, DOC, TRANSFER, DEBIT -> {
-			CheckingAccount account = transaction.getOriginAccount();
-			transactionCheckingAccountService.transferValue(account.getId(),
-					transaction.getDestinationAccount().getId(), transaction.getValue());
+			case DEBIT -> {
+				//todo testar
+				transactionValue *= 1.03;
+				checkFundsAndPerformTransaction(transaction, transactionValue);
+			}
+			case PIX, TED, DOC, TRANSFER -> {
+				checkFundsAndPerformTransaction(transaction, transactionValue);
 
-		}
+			}
 		}
 
+	}
+
+	private void checkFundsAndPerformTransaction(Transaction transaction, Double transactionValue)
+			throws InsufficientFundsException {
+		CheckingAccount account = transaction.getOriginAccount();
+		transactionCheckingAccountService.transferValue(account.getId(),
+				transaction.getDestinationAccount().getId(), transaction.getValue());
 	}
 
 	/*

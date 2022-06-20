@@ -4,12 +4,10 @@ import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
 import br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum;
 import br.com.foursys.fourcamp.fourbank.exceptions.CardNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.CreditLimitInsufficientException;
-import br.com.foursys.fourcamp.fourbank.exceptions.InsufficientFundsException;
 import br.com.foursys.fourcamp.fourbank.model.CheckingAccount;
 import br.com.foursys.fourcamp.fourbank.model.CreditCard;
 import br.com.foursys.fourcamp.fourbank.model.Insurance;
 import br.com.foursys.fourcamp.fourbank.model.Transaction;
-import br.com.foursys.fourcamp.fourbank.model.TransactionAccount;
 import br.com.foursys.fourcamp.fourbank.repository.CheckingAccountRepository;
 import br.com.foursys.fourcamp.fourbank.repository.CreditCardRepository;
 import br.com.foursys.fourcamp.fourbank.repository.TransactionRepository;
@@ -88,6 +86,8 @@ public class CreditCardService {
 
 	public boolean assertCreditCardStillHasLimit(Double transactionValue, Long creditCardId) throws CardNotFoundException,
 			CreditLimitInsufficientException {
+		//todo testar
+		transactionValue *= 1.05;
 		CreditCard creditCard = verifyIfExists(creditCardId);
 		Double currentMonthValueTransaction = verifyMonthCreditLimit();
 		Double creditLimit = creditCard.getCreditLimit();
@@ -97,6 +97,7 @@ public class CreditCardService {
 		}
 		return true;
 	}
+
 
 	public Double verifyMonthCreditLimit() {
 		Month currentMonth = LocalDateTime.now().getMonth();
