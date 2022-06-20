@@ -123,10 +123,10 @@ public class DebitCardService {
 		return debitCardRepository.save(debitCard);
 	}
 	
-	/*public DebitCard updatePassword(Long id, DebitCardUpdatePasswordDTO debitCardUpdatePasswordDTO) throws CardNotFoundException {
-		DebitCard debitCard = debitCardMapper.toModel(debitCardUpdatePasswordDTO);
-		debitCard.setPassword(debitCardUpdatePasswordDTO.getPassword());
+	public DebitCard updatePassword(String creditCardNumber, String password) throws CardNotFoundException {
+		DebitCard debitCard = debitCardRepository.findByNumber(creditCardNumber);
+		debitCard.setPassword(password);
 		return debitCardRepository.save(debitCard);
-	}*/
+	}
 
 }

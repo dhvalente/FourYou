@@ -1,10 +1,7 @@
 package br.com.foursys.fourcamp.fourbank.controller;
 
-import br.com.foursys.fourcamp.fourbank.dto.DebitCardUpdatePasswordDTO;
-import br.com.foursys.fourcamp.fourbank.dto.DepositDto;
 import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
 import br.com.foursys.fourcamp.fourbank.exceptions.CardNotFoundException;
-import br.com.foursys.fourcamp.fourbank.model.CreditCard;
 import br.com.foursys.fourcamp.fourbank.model.DebitCard;
 import br.com.foursys.fourcamp.fourbank.service.DebitCardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,10 +66,11 @@ public class DebitCardController {
 
 	}
 	
-	/*@PutMapping("/updatepassword/{id}")
-	public DebitCard updatePassword(@PathVariable Long id, @RequestBody DebitCardUpdatePasswordDTO debitCardUpdatePasswordDTO) throws CardNotFoundException {
-		return debitCardService.updatePassword(id, debitCardUpdatePasswordDTO);
+	@PutMapping("/updatepassword/{dcnumber}/{password}")
+	public DebitCard updatePassword(@PathVariable String debitCardNumber, @PathVariable String password)
+			throws CardNotFoundException {
+		return debitCardService.updatePassword(debitCardNumber, password);
 
-	}	*/
+	}
 	
 }
