@@ -5,6 +5,7 @@ import br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum;
 import br.com.foursys.fourcamp.fourbank.exceptions.CardNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.CreditLimitInsufficientException;
 import br.com.foursys.fourcamp.fourbank.model.CreditCard;
+import br.com.foursys.fourcamp.fourbank.model.Insurance;
 import br.com.foursys.fourcamp.fourbank.model.Transaction;
 import br.com.foursys.fourcamp.fourbank.repository.CreditCardRepository;
 import br.com.foursys.fourcamp.fourbank.repository.TransactionRepository;
@@ -22,6 +23,8 @@ public class CreditCardService {
 
 	@Autowired
 	private TransactionRepository transactionRepository;
+	@Autowired
+	private InsuranceService insuranceService;
 
 	public CreditCardService(CreditCardRepository creditCardRepository) {
 		this.creditCardRepository = creditCardRepository;
@@ -117,6 +120,12 @@ public class CreditCardService {
 		Double income = creditCard.getAccount().getCustomer().getIncome();
 		Double limit = income * 2;
 		creditCard.setCreditLimit(limit);
+	}
+	
+	public int createInsuranceAndGeneratePolicyNumber(Long id , String rules, Insurance insurance) throws CardNotFoundException {
+		CreditCard creditCard =verifyIfExists(id);
+		insuranceService.registerInsurance(rules, insurance, creditCard);
+		return insurance.getPolicy().getPolicyNumber();
 	}
 
 }

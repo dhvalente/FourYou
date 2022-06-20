@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.*;
 
@@ -24,17 +25,16 @@ public class Insurance implements Serializable {
 	private Long id;
 
 	@NonNull
-	private String name;
-
-	@NonNull
 	private String rules;
+	
+	private Date date = new Date();
 
 	@ManyToOne
 	@JoinColumn(name="tb_creditcard_id", nullable=false)
 	private CreditCard creditCard;
-
-	public void registerInsurance(String name, String rules) {
-		// todo
-	}
+	
+	@OneToOne
+	private Policy policy;
+	
 
 }

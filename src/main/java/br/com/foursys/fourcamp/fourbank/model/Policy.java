@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.io.Serializable;
+import java.util.Random;
 
 import javax.persistence.*;
 
@@ -32,10 +33,12 @@ public class Policy implements Serializable{
     private Double policyValue;
     @NonNull
     private String termsDescription;
-
-    public Integer generatePolicyNumber(CreditCard creditCard, Double policyValue, String termsDescription) {
-        //todo
-        return 0;
+    
+    private Integer policyNumber;
+    
+    public Integer generatePolicyNumber() {
+    	Integer policyNumber = new Random().nextInt(999999999);
+    	return policyNumber;
     }
 
 }
