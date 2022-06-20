@@ -26,10 +26,11 @@ public class PaymentMethodValidations {
                 cpfCnpj.matcher(pix).matches();
     }
 
-    public static Boolean checkPaymentBoundsToAccount(Account account, Integer paymentMethod, String paymentData) {
+    public static Boolean checkPaymentBoundsToAccount(CheckingAccount account, Integer paymentMethod, String paymentData) {
         Boolean validation = false;
         switch (paymentMethod) {
-            case 0, 1 -> validation = assertAccountHasCard(account, paymentData);
+            case 0 -> validation = assertAccountHasCreditCard(account, paymentData);
+            case 1 ->validation = assertAccountHasDebitCard(account, paymentData);
             case 2 -> validation = assertAccountHasPix(account, paymentData);
             case 3, 4 -> validation = true;
             default -> validation = false;
@@ -37,7 +38,7 @@ public class PaymentMethodValidations {
         return validation;
     }
 
-    private static Boolean assertAccountHasPix(Account account, String paymentData) {
+    private static Boolean assertAccountHasPix(CheckingAccount account, String paymentData) {
         for (Pix pix : account.getPix()) {
             if (paymentData.equals(pix.getKeyContent())) {
                 return true;
@@ -46,8 +47,17 @@ public class PaymentMethodValidations {
         return false;
     }
 
-    private static Boolean assertAccountHasCard(Account account, String paymentData) {
-        for (Card card : account.getCard()) {
+    private static Boolean assertAccountHasCreditCard(CheckingAccount account, String paymentData) {
+        for (CreditCard card : account.getCreditCard()) {
+            if (paymentData.equals(card.getCustomerCardName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private static Boolean assertAccountHasDebitCard(CheckingAccount account, String paymentData) {
+        for (DebitCard card : account.getDebitCard()) {
             if (paymentData.equals(card.getCustomerCardName())) {
                 return true;
             }

@@ -89,8 +89,8 @@ public class InsuranceService {
 		switch (rules) {
 		case "automovel":
 			insurance.setRules(rules);
-			Policy policyAutomvel = new Policy(null, creditCard, insurance, 35.00, "Automóvel no valor minímo de 10 salários minímos", policyNumber);			
-			policyRepository.save(policyAutomvel);
+			Policy policyAutomovel = new Policy(null, creditCard, insurance, 35.00, "Automóvel no valor minímo de 10 salários minímos", policyNumber);			
+			policyRepository.save(policyAutomovel);
 			insuranceRepository.save(insurance);
 			break;
 		case "vida":

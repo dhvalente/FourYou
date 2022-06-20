@@ -14,7 +14,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/creditCard")
+@RequestMapping("/creditcard")
 public class CreditCardController {
 	
 	@Autowired

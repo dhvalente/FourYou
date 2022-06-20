@@ -31,11 +31,11 @@ public class Transaction implements Serializable{
     @ManyToOne
     @JoinColumn(name = "account_id")
     @NonNull
-    private Account originAccount;
+    private CheckingAccount originAccount;
     @ManyToOne
     @JoinColumn(name = "destination_account_id")
     @NonNull
-    private Account destinationAccount;
+    private CheckingAccount destinationAccount;
     @NonNull
     private Double value;
 
