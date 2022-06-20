@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class AccountNotFoundException extends Exception{
 
     public AccountNotFoundException(Integer id) {
-        super("Nenhum Pix encontrado com a id " + id);
+        super("Nenhuma conta encontrada com a id " + id);
     }
 
 }

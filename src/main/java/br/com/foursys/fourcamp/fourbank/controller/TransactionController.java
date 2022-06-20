@@ -23,7 +23,7 @@ public class TransactionController {
         this.paymentMethodService = paymentMethodService;
     }
 
-    @PostMapping("/{id}")
+    @PostMapping
     public ResponseEntity<Object> createPaymentMethod(@RequestBody Transaction paymentMethod) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(paymentMethodService.createPaymentMethod(paymentMethod));

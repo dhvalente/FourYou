@@ -1,5 +1,6 @@
 package br.com.foursys.fourcamp.fourbank.service;
 
+
 import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
 import br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum;
 import br.com.foursys.fourcamp.fourbank.exceptions.CardNotFoundException;
@@ -19,6 +20,9 @@ import java.util.List;
 public class DebitCardService {
 	@Autowired
 	private DebitCardRepository debitCardRepository;
+	
+	
+	//private DebitCardMapper debitCardMapper = DebitCardMapper.INSTANCE;
 
 	@Autowired
 	private TransactionRepository transactionRepository;
@@ -118,5 +122,11 @@ public class DebitCardService {
 		debitCard.setLimitByTransaction(limit);
 		return debitCardRepository.save(debitCard);
 	}
+	
+	/*public DebitCard updatePassword(Long id, DebitCardUpdatePasswordDTO debitCardUpdatePasswordDTO) throws CardNotFoundException {
+		DebitCard debitCard = debitCardMapper.toModel(debitCardUpdatePasswordDTO);
+		debitCard.setPassword(debitCardUpdatePasswordDTO.getPassword());
+		return debitCardRepository.save(debitCard);
+	}*/
 
 }

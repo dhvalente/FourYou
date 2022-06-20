@@ -4,9 +4,13 @@ import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
 import br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum;
 import br.com.foursys.fourcamp.fourbank.exceptions.CardNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.CreditLimitInsufficientException;
+import br.com.foursys.fourcamp.fourbank.exceptions.InsufficientFundsException;
+import br.com.foursys.fourcamp.fourbank.model.CheckingAccount;
 import br.com.foursys.fourcamp.fourbank.model.CreditCard;
 import br.com.foursys.fourcamp.fourbank.model.Insurance;
 import br.com.foursys.fourcamp.fourbank.model.Transaction;
+import br.com.foursys.fourcamp.fourbank.model.TransactionAccount;
+import br.com.foursys.fourcamp.fourbank.repository.CheckingAccountRepository;
 import br.com.foursys.fourcamp.fourbank.repository.CreditCardRepository;
 import br.com.foursys.fourcamp.fourbank.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +19,13 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CreditCardService {
+	@Autowired
+	private CheckingAccountRepository checkingAccountRepository;
+	
 	@Autowired
 	private CreditCardRepository creditCardRepository;
 
@@ -31,8 +39,6 @@ public class CreditCardService {
 	}
 
 	public MessageResponseDTO createCreditCard(CreditCard creditCard) {
-		// Regra de negocio correta, falta instanciar customer e account
-		// setCreditLimit(creditCard);
 		CreditCard savedCreditCard = getCreditCard(creditCard);
 		return createMessageResponse(savedCreditCard.getId(), "Created ");
 	}
@@ -55,6 +61,7 @@ public class CreditCardService {
 
 	private CreditCard getCreditCard(CreditCard creditCard) {
 		CreditCard validCreditCard = creditCardIsValid(creditCard);
+		setCreditLimit(creditCard);
 		return creditCardRepository.save(creditCard);
 	}
 
@@ -117,7 +124,9 @@ public class CreditCardService {
 	}
 
 	public void setCreditLimit(CreditCard creditCard) {
-		Double income = creditCard.getAccount().getCustomer().getIncome();
+		Optional<CheckingAccount> checkingAccount = checkingAccountRepository.findById(creditCard.getAccount().getId()); 
+		checkingAccount.get();
+		Double income = checkingAccount.get().getCustomer().getIncome();
 		Double limit = income * 2;
 		creditCard.setCreditLimit(limit);
 	}
@@ -127,6 +136,8 @@ public class CreditCardService {
 		insuranceService.registerInsurance(rules, insurance, creditCard);
 		return insurance.getPolicy().getPolicyNumber();
 	}
+	
+
 
 
 }

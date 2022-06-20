@@ -1,5 +1,7 @@
 package br.com.foursys.fourcamp.fourbank.controller;
 
+import br.com.foursys.fourcamp.fourbank.dto.DebitCardUpdatePasswordDTO;
+import br.com.foursys.fourcamp.fourbank.dto.DepositDto;
 import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
 import br.com.foursys.fourcamp.fourbank.exceptions.CardNotFoundException;
 import br.com.foursys.fourcamp.fourbank.model.CreditCard;
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/debitCard")
+@RequestMapping("/debitcard")
 public class DebitCardController {
 
 	@Autowired
@@ -22,8 +24,8 @@ public class DebitCardController {
 	public DebitCardController(DebitCardService debitCardService) {
 		this.debitCardService = debitCardService;
 	}
-
-	@PostMapping("/{id}")
+	
+	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public MessageResponseDTO createDebitCard(@RequestBody DebitCard debitCard) {
 		return debitCardService.createDebitCard(debitCard);
@@ -66,4 +68,11 @@ public class DebitCardController {
 		return debitCardService.updateLimitByTransaction(limit, id);
 
 	}
+	
+	/*@PutMapping("/updatepassword/{id}")
+	public DebitCard updatePassword(@PathVariable Long id, @RequestBody DebitCardUpdatePasswordDTO debitCardUpdatePasswordDTO) throws CardNotFoundException {
+		return debitCardService.updatePassword(id, debitCardUpdatePasswordDTO);
+
+	}	*/
+	
 }

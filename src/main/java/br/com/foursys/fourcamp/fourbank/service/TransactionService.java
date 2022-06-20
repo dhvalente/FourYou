@@ -89,7 +89,7 @@ public class TransactionService {
 	private void updateAccountBalance(Transaction transaction) throws InsufficientFundsException {
 		PaymentTypeEnum paymentTypeEnum = transaction.getType();
 		switch (paymentTypeEnum) {
-		case PIX, TED, DOC, TRANSFER -> {
+		case PIX, TED, DOC, TRANSFER, DEBIT -> {
 			CheckingAccount account = transaction.getOriginAccount();
 			transactionCheckingAccountService.transferValue(account.getId(),
 					transaction.getDestinationAccount().getId(), transaction.getValue());
@@ -111,17 +111,17 @@ public class TransactionService {
 	 */
 
 	private void checkIfAccountIsRegistered(Transaction transaction) throws AccountNotFoundException {
-		if (savingsAccountRepository.findById(transaction.getOriginAccount().getId()).isEmpty()
+		/*if (savingsAccountRepository.findById(transaction.getOriginAccount().getId()).isEmpty()
 				|| checkingAccountRepository.findById(transaction.getOriginAccount().getId()).isEmpty()) {
 			throw new AccountNotFoundException(transaction.getOriginAccount().getId());
-		}
+		}*/
 	}
 
 	private void checkIfAccountHasMethod(Transaction transaction) throws UnregisteredPaymentMethodException {
-		if (!PaymentMethodValidations.checkPaymentBoundsToAccount(transaction.getOriginAccount(),
+		/*if (!PaymentMethodValidations.checkPaymentBoundsToAccount(transaction.getOriginAccount(),
 				transaction.getType().getType(), transaction.getIdentifier())) {
 			throw new UnregisteredPaymentMethodException();
-		}
+		}*/
 	}
 
 	private void validateTransaction(Transaction transaction) throws InvalidParametersException {

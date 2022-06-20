@@ -11,6 +11,7 @@ import org.springframework.lang.NonNull;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Data
@@ -22,7 +23,7 @@ public class Transaction implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-    @Column(name = "id", nullable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NonNull
     private PaymentTypeEnum type;
