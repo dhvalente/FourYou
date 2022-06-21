@@ -1,7 +1,6 @@
 package br.com.foursys.fourcamp.fourbank.controller;
 
 import br.com.foursys.fourcamp.fourbank.dto.DepositDto;
-import br.com.foursys.fourcamp.fourbank.dto.TransferDTO;
 import br.com.foursys.fourcamp.fourbank.dto.WithdrawDTO;
 import br.com.foursys.fourcamp.fourbank.exceptions.InsufficientFundsException;
 import br.com.foursys.fourcamp.fourbank.service.TransactionCheckingAccountService;
@@ -41,17 +40,6 @@ public class TransactionAccountController {
         }
     }
 
-    @PostMapping("/savings/transfer")
-    public ResponseEntity<Object> transferValueSavings(@RequestBody TransferDTO transferDTO) {
-        try {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(transactionSavingsService.transferValue(transferDTO.
-                            getPayerId(), transferDTO.getReceiverId(), transferDTO.getTransferValue()));
-        } catch (InsufficientFundsException e) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ResponseModel(HttpStatus.NOT_ACCEPTABLE,
-                    HttpStatus.NOT_ACCEPTABLE.value(), e.getMessage()));
-        }
-    }
-
     @PostMapping("/checking/deposit")
     public ResponseEntity<Object> DepositValueChecking(@RequestBody DepositDto depositDto){
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(transactionCheckingAccountService.depositValue(
@@ -68,16 +56,6 @@ public class TransactionAccountController {
         }
     }
 
-    @PostMapping("/checking/transfer")
-    public ResponseEntity<Object> transferValueChecking(@RequestBody TransferDTO transferDTO) {
-        try {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(transactionCheckingAccountService.transferValue(
-                    transferDTO.getPayerId(), transferDTO.getReceiverId(), transferDTO.getTransferValue()));
-        } catch (InsufficientFundsException e) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ResponseModel(HttpStatus.NOT_ACCEPTABLE,
-                    HttpStatus.NOT_ACCEPTABLE.value(), e.getMessage()));
-        }
-    }
 
 
 }

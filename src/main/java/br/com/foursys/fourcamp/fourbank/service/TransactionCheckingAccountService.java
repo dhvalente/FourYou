@@ -52,11 +52,16 @@ public class TransactionCheckingAccountService {
         }
     }
 
-    public Object transferValue(Integer payerId, Integer receiverId, Double transferValue) throws InsufficientFundsException {
+    public Object transferValue(String paymentType, Integer payerId, Integer receiverId, Double transferValue) throws InsufficientFundsException {
         CheckingAccount accountPayer = checkingAccountService.findById(payerId).get();
         CheckingAccount accountReceiver = checkingAccountService.findById(receiverId).get();
-        if (accountPayer.getBalance() >= transferValue) {
-            accountPayer.setBalance(accountPayer.getBalance() - transferValue);
+        if (accountPayer.getBalance() >= (transferValue * 1.03)) {
+            if (paymentType.equals("debit")) {
+                //todo test
+                accountPayer.setBalance(accountPayer.getBalance() - transferValue * 1.03);
+            } else {
+                accountPayer.setBalance(accountPayer.getBalance() - transferValue);
+            }
             checkingAccountService.save(accountPayer);
             accountReceiver.setBalance(accountReceiver.getBalance() + transferValue);
             checkingAccountService.save(accountReceiver);

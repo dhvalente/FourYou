@@ -9,5 +9,5 @@ public class CustomerNotFoundException extends Exception{
     public CustomerNotFoundException(Long id) {
         super("Nenhum Cliente encontrado com a id " + id);
     }
-    //todo conferir tipo de id
+
 }

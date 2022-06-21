@@ -77,12 +77,10 @@ public class TransactionService {
 			throws InvalidParametersException, UnregisteredPaymentMethodException, AccountNotFoundException,
 			CardNotFoundException, CreditLimitInsufficientException, InsufficientFundsException {
 		validateTransaction(transaction);
-		checkIfAccountHasMethod(transaction);
 		checkIfAccountIsRegistered(transaction);
 		checkIfCreditCardHasLimit(transaction);
 		checkIfDebitCardHasLimit(transaction);
 		updateAccountBalance(transaction);
-		// UpdateCreditCardInstallments(transaction);
 		return transaction;
 	}
 
@@ -91,49 +89,28 @@ public class TransactionService {
 		Double transactionValue = transaction.getValue();
 		switch (paymentTypeEnum) {
 			case DEBIT -> {
-				//todo testar
-				transactionValue *= 1.03;
-				checkFundsAndPerformTransaction(transaction, transactionValue);
+				checkFundsAndPerformTransaction("debit", transaction, transactionValue);
 			}
 			case PIX, TED, DOC, TRANSFER -> {
-				checkFundsAndPerformTransaction(transaction, transactionValue);
+				checkFundsAndPerformTransaction("other", transaction, transactionValue);
 
 			}
 		}
 
 	}
 
-	private void checkFundsAndPerformTransaction(Transaction transaction, Double transactionValue)
-			throws InsufficientFundsException {
+	private void checkFundsAndPerformTransaction(String paymentType, Transaction transaction,
+												 Double transactionValue) throws InsufficientFundsException {
 		CheckingAccount account = transaction.getOriginAccount();
-		transactionCheckingAccountService.transferValue(account.getId(),
+		transactionCheckingAccountService.transferValue(paymentType, account.getId(),
 				transaction.getDestinationAccount().getId(), transaction.getValue());
 	}
-
-	/*
-	 * private void UpdateCreditCardInstallments(Transaction paymentMethod) { if
-	 * (paymentMethod.getType().equals(0)) { //Diogo irá criar o findByCardNumber
-	 * CreditCard creditCard =
-	 * creditCardRepository.findByNumber(paymentMethod.getIdentifier());
-	 * CreditCardInstallment installment = new
-	 * CreditCardInstallment(LocalDate.now(),
-	 * paymentMethod.getNumberOfInstallments());
-	 * creditCard.getCreditCardInstallments().add(installment); } }
-	 */
 
 	private void checkIfAccountIsRegistered(Transaction transaction) throws AccountNotFoundException {
 		Integer id = transaction.getOriginAccount().getId();
 		checkingAccountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
 
 	}
-	//to do dando erro "Cartão ou pix não registrado na Conta selecionada!"
-	private void checkIfAccountHasMethod(Transaction transaction) throws UnregisteredPaymentMethodException {		
-		 /*if (!PaymentMethodValidations.checkPaymentBoundsToAccount(transaction.
-		 getOriginAccount(), transaction.getType().getType(),
-		 transaction.getIdentifier())) { throw new
-		 UnregisteredPaymentMethodException(); }
-		 
-	*/}
 
 	private void validateTransaction(Transaction transaction) throws InvalidParametersException {
 		if (!PaymentMethodValidations.paymentMethodValidation(transaction.getType().getType(),
