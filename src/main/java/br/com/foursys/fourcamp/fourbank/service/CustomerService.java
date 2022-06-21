@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 
 import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
 import br.com.foursys.fourcamp.fourbank.exceptions.CustomerNotFoundException;
+import br.com.foursys.fourcamp.fourbank.model.Address;
 import br.com.foursys.fourcamp.fourbank.model.Customer;
+import br.com.foursys.fourcamp.fourbank.repository.AddressRepository;
 import br.com.foursys.fourcamp.fourbank.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
