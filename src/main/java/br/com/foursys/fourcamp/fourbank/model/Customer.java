@@ -1,15 +1,16 @@
 package br.com.foursys.fourcamp.fourbank.model;
 
+import br.com.foursys.fourcamp.fourbank.enums.CustomerTypeEnum;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import lombok.*;
-import br.com.foursys.fourcamp.fourbank.enums.CustomerTypeEnum;
 
 @Data
 @Builder
@@ -28,6 +29,8 @@ public class Customer implements Serializable {
 	private String nCell;
 	private Double income;
 	private String Email;
+	@Column(unique = true)
+	private String login;
 	private String password;
 	private CustomerTypeEnum type;
 	private String imgUrl;
@@ -36,11 +39,12 @@ public class Customer implements Serializable {
 	private String dadName;
 	private String rg;
 	private String landline;
-
-	@OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+	
+	@OneToOne
+	@JoinColumn(name = "id_address", referencedColumnName = "id_address")
 	private Address address;
 	public Customer(Long id, String name, String dateOfBirth, String cpf, String nCell, Double income, String email,
-			String password, CustomerTypeEnum type, String imgUrl) {
+			String password, CustomerTypeEnum type, String imgUrl, String login) {
 		this.id = id;
 		this.name = name;
 		this.dateOfBirth = dateOfBirth;
@@ -51,6 +55,7 @@ public class Customer implements Serializable {
 		this.password = password;
 		this.type = type;
 		this.imgUrl = imgUrl;
+		this.login = login;
 		this.age = null;
 	}
 
