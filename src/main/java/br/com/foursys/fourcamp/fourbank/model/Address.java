@@ -2,10 +2,12 @@ package br.com.foursys.fourcamp.fourbank.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -23,6 +25,7 @@ public class Address implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_address")
 	private Long id;
 	private String street;
 	private String number;
@@ -30,8 +33,9 @@ public class Address implements Serializable {
 	private String district;
 	private String state;
 	private String zipcode;
+
+	@OneToOne(mappedBy = "address")
 	@JsonIgnore
-	@OneToOne
 	private Customer customer;
 	
 }

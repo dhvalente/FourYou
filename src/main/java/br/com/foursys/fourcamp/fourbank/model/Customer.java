@@ -33,8 +33,9 @@ public class Customer implements Serializable {
 	private String dadName;
 	private String rg;
 	private String landline;
-
-	@OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+	
+	@OneToOne
+	@JoinColumn(name = "id_address", referencedColumnName = "id_address")
 	private Address address;
 	public Customer(Long id, String name, String dateOfBirth, String cpf, String nCell, Double income, String email,
 			String password, CustomerTypeEnum type, String imgUrl) {
