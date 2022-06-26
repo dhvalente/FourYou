@@ -41,7 +41,7 @@ public class CheckingAccount implements Serializable{
 	@JsonIgnore
 	@OneToMany(mappedBy = "account")
 	protected Set<CreditCard> creditCard = new HashSet<>();
-	
+	@JsonIgnore
 	@OneToMany(mappedBy = "account")
 	protected Set<DebitCard> DebitCard = new HashSet<>();
 	private Double maintenanceFee;

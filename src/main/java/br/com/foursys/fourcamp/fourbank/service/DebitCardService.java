@@ -4,6 +4,7 @@ package br.com.foursys.fourcamp.fourbank.service;
 import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
 import br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum;
 import br.com.foursys.fourcamp.fourbank.exceptions.CardNotFoundException;
+import br.com.foursys.fourcamp.fourbank.exceptions.CardNumberNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.CreditLimitInsufficientException;
 import br.com.foursys.fourcamp.fourbank.model.DebitCard;
 import br.com.foursys.fourcamp.fourbank.model.Transaction;
@@ -66,8 +67,7 @@ public class DebitCardService {
 		return debitCardRepository.findById(id).orElseThrow(() -> new CardNotFoundException(id));
 	}
 
-	private DebitCard debitCardIsValid(DebitCard debitCard) {
-		// validações
+	private DebitCard debitCardIsValid(DebitCard debitCard) {		
 		return debitCard;
 	}
 
@@ -75,8 +75,12 @@ public class DebitCardService {
 		return verifyIfExists(id);
 	}
 
-	public DebitCard findByNumber(String number) throws CardNotFoundException {
-		return debitCardRepository.findByNumber(number);
+	public DebitCard findByNumber(String number) throws CardNumberNotFoundException {
+		DebitCard card = debitCardRepository.findByNumber(number);
+		if(card == null) {
+			throw new CardNumberNotFoundException(number);
+		}
+		return card;
 	}
 
 	public Boolean assertDebitCardHasLimit(Double transactionValue, Long cardId) throws CardNotFoundException,

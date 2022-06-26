@@ -1,5 +1,4 @@
 package br.com.foursys.fourcamp.fourbank.dto;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,10 +8,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DebitCardUpdatePasswordDTO {
-
-    private Long id;
-
+public class UpdatePasswordDTO {
     private String password;
 
 }

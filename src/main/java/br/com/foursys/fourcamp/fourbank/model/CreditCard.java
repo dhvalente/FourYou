@@ -14,6 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -43,18 +46,14 @@ public class CreditCard implements Serializable{
 	protected String label;
 	protected Integer cvv;
 	protected boolean isActive = false;
-
 	@ManyToOne
 	@JoinColumn(name="tb_account", referencedColumnName = "id")
 	protected CheckingAccount account;
 	private Double limitByTransaction;
-
 	private Double creditLimit;
 	@JsonIgnore
 	@OneToMany(mappedBy = "creditCard")
 	private List<Insurance> insuranceProducts = new ArrayList<Insurance>();
-
-	//private List<CreditCardInstallment> creditCardInstallments;
 	
 	public String generateNumber(String label) {
         GenerateCardNumber.LABEL = Label.getLabel(label);

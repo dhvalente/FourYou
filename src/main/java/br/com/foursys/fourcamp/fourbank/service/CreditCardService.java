@@ -1,9 +1,13 @@
 package br.com.foursys.fourcamp.fourbank.service;
 
+import br.com.foursys.fourcamp.fourbank.dto.UpdatePasswordDTO;
 import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
 import br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum;
+import br.com.foursys.fourcamp.fourbank.exceptions.AccountNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.CardNotFoundException;
+import br.com.foursys.fourcamp.fourbank.exceptions.CardNumberNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.CreditLimitInsufficientException;
+import br.com.foursys.fourcamp.fourbank.exceptions.InvalidParametersException;
 import br.com.foursys.fourcamp.fourbank.model.*;
 import br.com.foursys.fourcamp.fourbank.repository.CheckingAccountRepository;
 import br.com.foursys.fourcamp.fourbank.repository.CreditCardRepository;
@@ -20,7 +24,7 @@ import java.util.Optional;
 public class CreditCardService {
 	@Autowired
 	private CheckingAccountRepository checkingAccountRepository;
-	
+
 	@Autowired
 	private CreditCardRepository creditCardRepository;
 
@@ -69,7 +73,6 @@ public class CreditCardService {
 	}
 
 	private CreditCard creditCardIsValid(CreditCard creditCard) {
-		// validações
 		return creditCard;
 	}
 
@@ -77,14 +80,16 @@ public class CreditCardService {
 		return verifyIfExists(id);
 	}
 
-	public CreditCard findByNumber(String number) throws CardNotFoundException {
-		return creditCardRepository.findByNumber(number);
+	public CreditCard findByNumber(String number) throws CardNumberNotFoundException {
+		CreditCard card = creditCardRepository.findByNumber(number);
+		if(card == null) {
+			throw new CardNumberNotFoundException(number);
+		}
+		return card;
 	}
 
-	public boolean assertCreditCardStillHasLimit(Double transactionValue, Long creditCardId) throws CardNotFoundException,
-			CreditLimitInsufficientException {
-		//todo testar
-		transactionValue *= 1.05;
+	public boolean assertCreditCardStillHasLimit(Double transactionValue, Long creditCardId)
+			throws CardNotFoundException, CreditLimitInsufficientException {
 		CreditCard creditCard = verifyIfExists(creditCardId);
 		Double currentMonthValueTransaction = verifyMonthCreditLimit();
 		Double creditLimit = creditCard.getCreditLimit();
@@ -94,7 +99,6 @@ public class CreditCardService {
 		}
 		return true;
 	}
-
 
 	public Double verifyMonthCreditLimit() {
 		Month currentMonth = LocalDateTime.now().getMonth();
@@ -109,37 +113,41 @@ public class CreditCardService {
 		return currentMonthValueTransaction;
 	}
 
-	public CreditCard updateStatus(String status, Long id) throws CardNotFoundException {
+	public CreditCard updateStatus(String status, Long id) throws CardNotFoundException, InvalidParametersException {
 		CreditCard creditCard = verifyIfExists(id);
 		if (status.equals("ativo")) {
 			creditCard.setActive(true);
 			creditCardRepository.save(creditCard);
-		} else if (status.equals("desativado")) {
+		}
+		else if (status.equals("inativo")) {
 			creditCard.setActive(false);
 			creditCardRepository.save(creditCard);
+		} 
+		else {
+			throw new InvalidParametersException();
 		}
 		return creditCardRepository.save(creditCard);
 	}
 
 	public void setCreditLimit(CreditCard creditCard) {
-		Optional<CheckingAccount> checkingAccount = checkingAccountRepository.findById(creditCard.getAccount().getId()); 
+		Optional<CheckingAccount> checkingAccount = checkingAccountRepository.findById(creditCard.getAccount().getId());
 		checkingAccount.get();
 		Double income = checkingAccount.get().getCustomer().getIncome();
 		Double limit = income * 2;
 		creditCard.setCreditLimit(limit);
 	}
-	
-	public int createInsuranceAndGeneratePolicyNumber(Long id , String rules, Insurance insurance) throws CardNotFoundException {
-		CreditCard creditCard =verifyIfExists(id);
+
+	public int createInsuranceAndGeneratePolicyNumber(Long id, String rules, Insurance insurance)
+			throws CardNotFoundException {
+		CreditCard creditCard = verifyIfExists(id);
 		insuranceService.registerInsurance(rules, creditCard);
 		return insurance.getPolicy().getPolicyNumber();
 	}
 
-	public CreditCard updatePassword(Long id, String password) throws CardNotFoundException {
+	public CreditCard updatePassword(Long id, UpdatePasswordDTO password) throws CardNotFoundException {
 		CreditCard creditCard = verifyIfExists(id);
-		creditCard.setPassword(password);
+		creditCard.setPassword(password.getPassword());
 		return creditCardRepository.save(creditCard);
 	}
-
 
 }

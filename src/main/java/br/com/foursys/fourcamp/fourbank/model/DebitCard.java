@@ -40,7 +40,6 @@ public class DebitCard implements Serializable {
 	protected String label;
 	protected Integer cvv;
 	protected boolean isActive = false;
-	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="tb_account", referencedColumnName = "id")
 	protected CheckingAccount account;

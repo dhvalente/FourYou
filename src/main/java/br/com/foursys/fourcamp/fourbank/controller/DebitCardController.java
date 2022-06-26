@@ -2,10 +2,15 @@ package br.com.foursys.fourcamp.fourbank.controller;
 
 import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
 import br.com.foursys.fourcamp.fourbank.exceptions.CardNotFoundException;
+import br.com.foursys.fourcamp.fourbank.exceptions.CardNumberNotFoundException;
+import br.com.foursys.fourcamp.fourbank.model.CreditCard;
 import br.com.foursys.fourcamp.fourbank.model.DebitCard;
 import br.com.foursys.fourcamp.fourbank.service.DebitCardService;
+import br.com.foursys.fourcamp.fourbank.util.ResponseModel;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,8 +29,8 @@ public class DebitCardController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public MessageResponseDTO createDebitCard(@RequestBody DebitCard debitCard) {
-		return debitCardService.createDebitCard(debitCard);
+	public ResponseEntity<Object> createCreditCard(@RequestBody DebitCard debitCard) {
+		 return ResponseEntity.status(HttpStatus.CREATED).body(debitCardService.createDebitCard(debitCard));
 	}
 
 	@GetMapping
@@ -34,12 +39,25 @@ public class DebitCardController {
 	}
 
 	@GetMapping("/findById/{id}")
-	public DebitCard findById(@PathVariable Long id) throws CardNotFoundException {
-		return debitCardService.findById(id);
+	public ResponseEntity<Object> findById(@PathVariable Long id) throws CardNotFoundException {
+		try {		
+			return ResponseEntity.status(HttpStatus.OK).body(debitCardService.findById(id));
+		}catch (CardNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(HttpStatus.NOT_FOUND,
+                    HttpStatus.NOT_FOUND.value(), e.getMessage()));
+		}
+
 	}
+	
 	@GetMapping("/findByNumber/{number}")
-	public DebitCard findById(@PathVariable String number) throws CardNotFoundException {
-		return debitCardService.findByNumber(number);
+	public ResponseEntity<Object> findById(@PathVariable String number) throws CardNumberNotFoundException {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(debitCardService.findByNumber(number));
+		}catch (CardNumberNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(HttpStatus.NOT_FOUND,
+                    HttpStatus.NOT_FOUND.value(), e.getMessage()));
+		}
+		
 	}
 
 	@PutMapping("/{id}")
