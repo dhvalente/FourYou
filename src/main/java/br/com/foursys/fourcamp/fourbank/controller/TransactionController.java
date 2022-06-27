@@ -42,9 +42,9 @@ public class TransactionController {
         }
     }
 
-    @GetMapping
-    public List<Transaction> listAllByAccount(Integer accountId) {
-        return paymentMethodService.listAllByAccount(accountId);
+    @GetMapping("/listall/{id}")
+    public List<Transaction> listAllByAccount(@PathVariable Integer id) {
+        return paymentMethodService.listAllByAccount(id);
     }
 
     @GetMapping("/{id}")

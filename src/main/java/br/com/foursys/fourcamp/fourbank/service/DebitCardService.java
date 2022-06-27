@@ -2,10 +2,13 @@ package br.com.foursys.fourcamp.fourbank.service;
 
 
 import br.com.foursys.fourcamp.fourbank.dto.MessageResponseDTO;
+import br.com.foursys.fourcamp.fourbank.dto.UpdatePasswordDTO;
 import br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum;
 import br.com.foursys.fourcamp.fourbank.exceptions.CardNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.CardNumberNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.CreditLimitInsufficientException;
+import br.com.foursys.fourcamp.fourbank.exceptions.InvalidParametersException;
+import br.com.foursys.fourcamp.fourbank.model.CreditCard;
 import br.com.foursys.fourcamp.fourbank.model.DebitCard;
 import br.com.foursys.fourcamp.fourbank.model.Transaction;
 import br.com.foursys.fourcamp.fourbank.repository.DebitCardRepository;
@@ -108,28 +111,32 @@ public class DebitCardService {
 		return currentDayValueTransaction;
 	}
 
-	public DebitCard updateStatus(String status, Long id) throws CardNotFoundException {
+	public DebitCard updateStatus(String status, Long id) throws CardNotFoundException, InvalidParametersException {
 		DebitCard debitCard = verifyIfExists(id);
 		if (status.equals("ativo")) {
 			debitCard.setActive(true);
 			debitCardRepository.save(debitCard);
-		} else if (status.equals("desativado")) {
+		}
+		else if (status.equals("inativo")) {
 			debitCard.setActive(false);
 			debitCardRepository.save(debitCard);
+		} 
+		else {
+			throw new InvalidParametersException();
 		}
-
 		return debitCardRepository.save(debitCard);
 	}
 
 	public DebitCard updateLimitByTransaction(Double limit, Long id) throws CardNotFoundException {
 		DebitCard debitCard = verifyIfExists(id);
-		debitCard.setLimitByTransaction(limit);
-		return debitCardRepository.save(debitCard);
+		debitCard.setLimitByTransaction(limit);	
+		return debitCardRepository.save(debitCard);		
+		
 	}
 	
-	public DebitCard updatePassword(Long id, String password) throws CardNotFoundException {
+	public DebitCard updatePassword(Long id, UpdatePasswordDTO password) throws CardNotFoundException {
 		DebitCard debitCard = verifyIfExists(id);
-		debitCard.setPassword(password);
+		debitCard.setPassword(password.getPassword());
 		return debitCardRepository.save(debitCard);
 	}
 
