@@ -21,7 +21,6 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Inheritance
 public class CheckingAccount implements Serializable{
 	private static final long serialVersionUID = 1L;
 	@Id

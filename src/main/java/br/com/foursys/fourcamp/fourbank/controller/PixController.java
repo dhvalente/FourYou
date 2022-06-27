@@ -24,7 +24,7 @@ public class PixController {
         this.pixService = pixService;
     }
 
-    @PostMapping("/{id}")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> createPix(@RequestBody Pix pix) {
         try {

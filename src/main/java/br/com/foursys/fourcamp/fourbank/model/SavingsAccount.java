@@ -25,7 +25,6 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-@Inheritance
 public class SavingsAccount implements Serializable{
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -40,8 +39,6 @@ public class SavingsAccount implements Serializable{
 	@JoinColumn(name = "customer_id")
 	protected Customer customer;
 
-	@OneToMany
-	protected Set<Pix> pix = new HashSet<>();
 	@JsonIgnore
 	@OneToMany(mappedBy = "account")
 	protected Set<CreditCard> creditCard = new HashSet<>();
