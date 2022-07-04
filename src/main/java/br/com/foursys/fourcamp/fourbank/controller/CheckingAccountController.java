@@ -1,8 +1,10 @@
 package br.com.foursys.fourcamp.fourbank.controller;
 
 
+import br.com.foursys.fourcamp.fourbank.exceptions.AccountNotFoundException;
 import br.com.foursys.fourcamp.fourbank.model.CheckingAccount;
 import br.com.foursys.fourcamp.fourbank.service.CheckingAccountService;
+import br.com.foursys.fourcamp.fourbank.util.ResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +13,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/checkingaccount")
@@ -27,14 +28,19 @@ public class CheckingAccountController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<CheckingAccount> findById(@PathVariable Integer id) {
-        Optional<CheckingAccount> obj = service.findById(id);
+    public ResponseEntity<Object> findById(@PathVariable Integer id) throws AccountNotFoundException {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.findById(id));
+        } catch(AccountNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResponseModel(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(), e.getMessage()));
+        }
 
-        return ResponseEntity.status(HttpStatus.OK).body(obj.get());
     }
 
     @PostMapping
-    public ResponseEntity<CheckingAccount> save(@RequestBody CheckingAccount obj) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Object> save(@RequestBody CheckingAccount obj) {
     	service.maintenance(obj);
     	service.descontMaintenance(obj);
     	obj = service.save(obj);
@@ -43,15 +49,25 @@ public class CheckingAccountController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        service.delete(id);
-        return ResponseEntity.noContent().build();
-
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Object> delete(@PathVariable Integer id) throws AccountNotFoundException {
+        try {
+            service.delete(id);
+            return ResponseEntity.noContent().build();
+        } catch (AccountNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResponseModel(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(), e.getMessage()));
+        }
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<CheckingAccount> update(@PathVariable Integer id, @RequestBody CheckingAccount obj) {
-        obj = service.update(id, obj);
-        return ResponseEntity.ok().body(obj);
+    public ResponseEntity<Object> update(@PathVariable Integer id, @RequestBody CheckingAccount obj) throws AccountNotFoundException{
+
+        try {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.update(id, obj));
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(HttpStatus.NOT_FOUND,
+                    HttpStatus.NOT_FOUND.value(), e.getMessage()));
+        }
     }
 }

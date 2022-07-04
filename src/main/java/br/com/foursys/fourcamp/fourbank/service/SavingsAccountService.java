@@ -1,5 +1,6 @@
 package br.com.foursys.fourcamp.fourbank.service;
 
+import br.com.foursys.fourcamp.fourbank.exceptions.AccountNotFoundException;
 import br.com.foursys.fourcamp.fourbank.model.SavingsAccount;
 import br.com.foursys.fourcamp.fourbank.repository.SavingsAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SavingsAccountService {
@@ -15,9 +15,11 @@ public class SavingsAccountService {
     @Autowired
     private SavingsAccountRepository repository;
 
-
-    public Optional<SavingsAccount> findById(Integer id) {
-        return repository.findById(id);
+    private SavingsAccount verifyIfExists(Integer id) throws AccountNotFoundException {
+        return repository.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
+    }
+    public SavingsAccount findById(Integer id) throws AccountNotFoundException {
+        return verifyIfExists(id);
     }
 
     public List<SavingsAccount> findAll() {
@@ -35,7 +37,7 @@ public class SavingsAccountService {
         return repository.save(obj);
     }
 
-    public void delete(Integer id) {
+    public void delete(Integer id) throws AccountNotFoundException {
         findById(id);
         repository.deleteById(id);
 

@@ -2,6 +2,7 @@ package br.com.foursys.fourcamp.fourbank.controller;
 
 import br.com.foursys.fourcamp.fourbank.dto.DepositDto;
 import br.com.foursys.fourcamp.fourbank.dto.WithdrawDTO;
+import br.com.foursys.fourcamp.fourbank.exceptions.AccountNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.InsufficientFundsException;
 import br.com.foursys.fourcamp.fourbank.service.TransactionCheckingAccountService;
 import br.com.foursys.fourcamp.fourbank.service.TransactionSavingsAccountService;
@@ -25,7 +26,7 @@ public class TransactionAccountController {
     TransactionCheckingAccountService transactionCheckingAccountService;
 
     @PostMapping("/savings/deposit")
-    public ResponseEntity<Object> DepositValueSavings(@RequestBody DepositDto depositDto){
+    public ResponseEntity<Object> DepositValueSavings(@RequestBody DepositDto depositDto) throws AccountNotFoundException {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(transactionSavingsService.depositValue(depositDto.
                 getAccountId(), depositDto.getDepositValue()));
     }
@@ -34,14 +35,14 @@ public class TransactionAccountController {
         try {
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(transactionSavingsService.withdrawValue(withdrawDto.
                     getAccountId(), withdrawDto.getWithdrawValue()));
-        } catch (InsufficientFundsException e) {
+        } catch (InsufficientFundsException | AccountNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ResponseModel(HttpStatus.NOT_ACCEPTABLE,
                     HttpStatus.NOT_ACCEPTABLE.value(), e.getMessage()));
         }
     }
 
     @PostMapping("/checking/deposit")
-    public ResponseEntity<Object> DepositValueChecking(@RequestBody DepositDto depositDto){
+    public ResponseEntity<Object> DepositValueChecking(@RequestBody DepositDto depositDto) throws AccountNotFoundException {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(transactionCheckingAccountService.depositValue(
                 depositDto.getAccountId(), depositDto.getDepositValue()));
     }
@@ -50,7 +51,7 @@ public class TransactionAccountController {
         try {
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(transactionCheckingAccountService.withdrawValue(
                     withdrawDto.getAccountId(), withdrawDto.getWithdrawValue()));
-        } catch (InsufficientFundsException e) {
+        } catch (InsufficientFundsException | AccountNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ResponseModel(HttpStatus.NOT_ACCEPTABLE,
                     HttpStatus.NOT_ACCEPTABLE.value(), e.getMessage()));
         }

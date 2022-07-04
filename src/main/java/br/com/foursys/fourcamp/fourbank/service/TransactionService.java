@@ -84,7 +84,7 @@ public class TransactionService {
 		return transaction;
 	}
 
-	private void updateAccountBalance(Transaction transaction) throws InsufficientFundsException {
+	private void updateAccountBalance(Transaction transaction) throws InsufficientFundsException, AccountNotFoundException {
 		PaymentTypeEnum paymentTypeEnum = transaction.getType();
 		Double transactionValue = transaction.getValue();
 		switch (paymentTypeEnum) {
@@ -100,7 +100,7 @@ public class TransactionService {
 	}
 
 	private void checkFundsAndPerformTransaction(String paymentType, Transaction transaction,
-												 Double transactionValue) throws InsufficientFundsException {
+												 Double transactionValue) throws InsufficientFundsException, AccountNotFoundException {
 		CheckingAccount account = transaction.getOriginAccount();
 		transactionCheckingAccountService.transferValue(paymentType, account.getId(),
 				transaction.getDestinationAccount().getId(), transaction.getValue());

@@ -1,5 +1,6 @@
 package br.com.foursys.fourcamp.fourbank.service;
 
+import br.com.foursys.fourcamp.fourbank.exceptions.AccountNotFoundException;
 import br.com.foursys.fourcamp.fourbank.model.CheckingAccount;
 import br.com.foursys.fourcamp.fourbank.repository.CheckingAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CheckingAccountService {
@@ -20,8 +20,11 @@ public class CheckingAccountService {
 		this.checkingAccountRepository = checkingAccountRepository;
 	}
 
-	public Optional<CheckingAccount> findById(Integer id) {
-		return checkingAccountRepository.findById(id);
+	private CheckingAccount verifyIfExists(Integer id) throws AccountNotFoundException {
+		return checkingAccountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
+	}
+	public CheckingAccount findById(Integer id) throws AccountNotFoundException {
+		return verifyIfExists(id);
 	}
 	public List<CheckingAccount> findAll() {
 
@@ -32,14 +35,14 @@ public class CheckingAccountService {
 		return checkingAccountRepository.save(obj);
 	}
 
-	public CheckingAccount update(Integer id, CheckingAccount obj) {
+	public CheckingAccount update(Integer id, CheckingAccount obj)throws AccountNotFoundException{
 		CheckingAccount entity = checkingAccountRepository.getOne(id);
 		upData(entity, obj);
 		return checkingAccountRepository.save(obj);
 	}
 
-	public void delete(Integer id) {
-		findById(id);
+	public void delete(Integer id) throws AccountNotFoundException {
+		verifyIfExists(id);
 		checkingAccountRepository.deleteById(id);
 
 	}

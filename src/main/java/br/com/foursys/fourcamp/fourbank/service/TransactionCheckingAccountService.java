@@ -2,6 +2,7 @@ package br.com.foursys.fourcamp.fourbank.service;
 
 
 import br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum;
+import br.com.foursys.fourcamp.fourbank.exceptions.AccountNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.InsufficientFundsException;
 import br.com.foursys.fourcamp.fourbank.model.CheckingAccount;
 import br.com.foursys.fourcamp.fourbank.model.TransactionAccount;
@@ -18,8 +19,8 @@ public class TransactionCheckingAccountService {
     @Autowired
     CheckingAccountService checkingAccountService;
 
-    public Object depositValue(Integer accountId, Double depositValue) {
-        CheckingAccount checkingAccount = checkingAccountService.findById(accountId).get();
+    public Object depositValue(Integer accountId, Double depositValue) throws AccountNotFoundException {
+        CheckingAccount checkingAccount = checkingAccountService.findById(accountId);
         checkingAccount.setBalance(checkingAccount.getBalance() + depositValue);
         checkingAccountService.save(checkingAccount);
 
@@ -33,8 +34,8 @@ public class TransactionCheckingAccountService {
         return checkingAccount;
     }
 
-    public Object withdrawValue(Integer accountId, Double withdrawValue) throws InsufficientFundsException {
-        CheckingAccount account = checkingAccountService.findById(accountId).get();
+    public Object withdrawValue(Integer accountId, Double withdrawValue) throws InsufficientFundsException, AccountNotFoundException {
+        CheckingAccount account = checkingAccountService.findById(accountId);
         if (account.getBalance() >= withdrawValue) {
             account.setBalance(account.getBalance() - withdrawValue);
             checkingAccountService.save(account);
@@ -52,9 +53,9 @@ public class TransactionCheckingAccountService {
         }
     }
 
-    public Object transferValue(String paymentType, Integer payerId, Integer receiverId, Double transferValue) throws InsufficientFundsException {
-        CheckingAccount accountPayer = checkingAccountService.findById(payerId).get();
-        CheckingAccount accountReceiver = checkingAccountService.findById(receiverId).get();
+    public Object transferValue(String paymentType, Integer payerId, Integer receiverId, Double transferValue) throws InsufficientFundsException, AccountNotFoundException {
+        CheckingAccount accountPayer = checkingAccountService.findById(payerId);
+        CheckingAccount accountReceiver = checkingAccountService.findById(receiverId);
         if (accountPayer.getBalance() >= (transferValue * 1.03)) {
             if (paymentType.equals("debit")) {
                 //todo test

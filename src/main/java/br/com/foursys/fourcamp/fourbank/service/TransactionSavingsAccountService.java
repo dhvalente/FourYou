@@ -1,6 +1,7 @@
 package br.com.foursys.fourcamp.fourbank.service;
 
 import br.com.foursys.fourcamp.fourbank.enums.PaymentTypeEnum;
+import br.com.foursys.fourcamp.fourbank.exceptions.AccountNotFoundException;
 import br.com.foursys.fourcamp.fourbank.exceptions.InsufficientFundsException;
 import br.com.foursys.fourcamp.fourbank.model.SavingsAccount;
 import br.com.foursys.fourcamp.fourbank.model.TransactionAccount;
@@ -16,8 +17,8 @@ public class TransactionSavingsAccountService {
     @Autowired
     TransactionAccountRepository transactionAccountRepository;
 
-    public Object depositValue(Integer accountId, Double depositValue) {
-        SavingsAccount savingsAccount = savingsAccountService.findById(accountId).get();
+    public Object depositValue(Integer accountId, Double depositValue) throws AccountNotFoundException {
+        SavingsAccount savingsAccount = savingsAccountService.findById(accountId);
         savingsAccount.setBalance(savingsAccount.getBalance() + depositValue);
         savingsAccountService.save(savingsAccount);
 
@@ -31,8 +32,8 @@ public class TransactionSavingsAccountService {
         return savingsAccount;
     }
 
-    public Object withdrawValue(Integer accountId, Double withdrawValue) throws InsufficientFundsException {
-        SavingsAccount account = savingsAccountService.findById(accountId).get();
+    public Object withdrawValue(Integer accountId, Double withdrawValue) throws InsufficientFundsException, AccountNotFoundException {
+        SavingsAccount account = savingsAccountService.findById(accountId);
         if (account.getBalance() >= withdrawValue) {
             account.setBalance(account.getBalance() - withdrawValue);
             savingsAccountService.save(account);
@@ -50,9 +51,9 @@ public class TransactionSavingsAccountService {
         }
     }
 
-    public Object transferValue(Integer payerId, Integer receiverId, Double transferValue) throws InsufficientFundsException {
-        SavingsAccount accountPayer = savingsAccountService.findById(payerId).get();
-        SavingsAccount accountReceiver = savingsAccountService.findById(receiverId).get();
+    public Object transferValue(Integer payerId, Integer receiverId, Double transferValue) throws InsufficientFundsException, AccountNotFoundException {
+        SavingsAccount accountPayer = savingsAccountService.findById(payerId);
+        SavingsAccount accountReceiver = savingsAccountService.findById(receiverId);
         if (accountPayer.getBalance() >= transferValue) {
             accountPayer.setBalance(accountPayer.getBalance() - transferValue);
             savingsAccountService.save(accountPayer);
