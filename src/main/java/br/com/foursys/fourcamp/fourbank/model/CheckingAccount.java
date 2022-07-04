@@ -2,14 +2,7 @@ package br.com.foursys.fourcamp.fourbank.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -21,19 +14,10 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CheckingAccount implements Serializable{
+@Table(name = "tb_checking_account")
+public class CheckingAccount extends Account implements Serializable{
 	private static final long serialVersionUID = 1L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected Integer id;
-	protected String number;
-	protected Integer numAgency;
-	protected String bank;
-	protected Double balance;
 
-	@ManyToOne
-	@JoinColumn(name = "customer_id")
-	protected Customer customer;
 
 	@OneToMany
 	protected Set<Pix> pix = new HashSet<>();

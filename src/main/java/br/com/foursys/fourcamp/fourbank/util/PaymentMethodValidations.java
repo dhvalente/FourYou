@@ -72,7 +72,7 @@ public class PaymentMethodValidations {
             case 0, 1 -> validation = validateCards(paymentData);
             case 2 -> validation = validatePix(paymentData);
             case 3, 4 -> validation = true;
-            default -> validation = false;
+            default -> validation = true;
         }
         return validation;
     }
